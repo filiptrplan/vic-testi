@@ -1,6 +1,18 @@
 from django.db import models
 
 # Create your models here.
+class Subject(models.Model):
+    name = models.CharField(max_length=20)
+    def __str__(self):
+        return self.name
+
+class Professor(models.Model):
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=30)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
+
 class Test(models.Model):
     class Year(models.IntegerChoices):
         YEAR1 = 1
@@ -10,13 +22,6 @@ class Test(models.Model):
     year = models.IntegerField(choices=Year.choices)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
 
-class Professor(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=30)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-
-class Subject(models.Model):
-    name = models.CharField(max_length=20)
 
 class TestImage(models.Model):
     file = models.FileField()
