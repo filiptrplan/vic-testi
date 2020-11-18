@@ -7,8 +7,7 @@
         Hello World
     {% endblock  %}</title>
     {% load static %}
-    {% load render_bundle from webpack_loader %}
-    {% render_bundle 'main' 'css' %}
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body>
     <div class="container">
@@ -41,6 +40,6 @@
             </div>
         </div>
     </div>
-    {% render_bundle 'main' 'js' %}
+    <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

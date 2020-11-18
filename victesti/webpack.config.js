@@ -15,7 +15,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "static/dist"),
         publicPath: '/static/',
-        filename: "bundles/app-[hash].js",
+        filename: "js/app.js",
     },
     module: {
         rules: [
@@ -41,18 +41,26 @@ module.exports = {
         ],
     },
     plugins: [
-        new BundleTrackerPlugin({
-            filename: './webpack-stats.json'
-        }),
         new MiniCssExtractPlugin({
-            filename: "bundles/app-[hash].css",
+            filename: "css/app.css"
         }),
         new CopyWebpackPlugin({
             patterns: [{ from: "static/src/images", to: "images" }],
-        }),
+        })
     ],
     watchOptions: {
         poll: true,
         aggregateTimeout: 300,
     },
+    devServer: {
+        contentBase: './static/dist/',
+        publicPath: '/static/',
+        hot: true,
+        proxy: {
+            '!/static/**': {
+                target: 'http://localhost:8000', // points to django dev server
+                changeOrigin: true,
+            }
+        }
+    }
 };
