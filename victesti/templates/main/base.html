@@ -6,10 +6,41 @@
     <title>{% block title %}
         Hello World
     {% endblock  %}</title>
+    {% load static %}
+    {% load render_bundle from webpack_loader %}
+    {% render_bundle 'main' 'css' %}
 </head>
 <body>
-    
-    {% load static %}
-    <script src="{% static 'app.js' %}"></script>
+    <div class="container">
+        <div class="nav">
+            <div class="columns nav">
+                <div class="column logo is-2"><img src="{% static 'images/logo.png' %}" alt="GimVič Logo"></div>
+                {% with request.resolver_match.url_name as url_name %}
+                <div class="column nav-link is-1">
+                    <a href="{% url 'main.home' %}" class="{% if url_name == 'main.home' %}active disabled{% endif %}">Domov</a>
+                </div>
+                <div class="column nav-link is-1">
+                    <a href="{% url 'tests.search' %}" class="{% if url_name == 'tests.search' %}active disabled{% endif %}">Iskanje</a>
+                </div>
+                <div class="column nav-link is-1">
+                    <a href="{% url 'tests.upload' %}" class="{% if url_name == 'tests.upload' %}active disabled{% endif %}">Naloži test</a>
+                </div>
+                <div class="column nav-link is-2">
+                    <a href="#">Viški Gimnazijci</a>
+                </div>
+                <div class="column is-2"></div>
+                <div class="column login-button is-3">Hello</div>
+                {% endwith %}
+            </div>
+        </div>
+        <div class="content-container columns is-centered">
+            <div class="content column is-two-thirds">
+                {% block content %}
+                <h1>test</h1>
+                {% endblock content %}
+            </div>
+        </div>
+    </div>
+    {% render_bundle 'main' 'js' %}
 </body>
 </html>
