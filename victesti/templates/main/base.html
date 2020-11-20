@@ -10,32 +10,41 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body>
-    <div class="container">
-        <div class="nav">
-            <div class="columns nav">
-                <div class="column logo is-2"><img src="{% static 'images/logo.png' %}" alt="GimVič Logo"></div>
-                {% with request.resolver_match.url_name as url_name %}
-                <div class="column nav-link is-1">
-                    <a href="{% url 'main.home' %}" class="{% if url_name == 'main.home' %}active disabled{% endif %}">Domov</a>
+    <div class="main-container">
+        <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+            <div class="container is-widescreen">
+                <div class="navbar-brand mx-3 logo">
+                    <a class="navbar-item" href="{% url 'main.home' %}">
+                        <img src="{% static 'images/logo.png' %}" alt="GimVič Logo">
+                    </a>
+                    <a role="button" data-target="navMenu" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
                 </div>
-                <div class="column nav-link is-1">
-                    <a href="{% url 'tests.search' %}" class="{% if url_name == 'tests.search' %}active disabled{% endif %}">Iskanje</a>
+                <div class="navbar-menu" id="navMenu">
+                    <div class="navbar-start is-size-6">
+                        {% with request.resolver_match.url_name as url_name %}
+                        <a href="{% url 'main.home' %}" class="navbar-item {% if url_name == 'main.home' %}is-active active disabled{% endif %}">DOMOV</a>
+                        <a href="{% url 'tests.search' %}" class="navbar-item {% if url_name == 'tests.search' %}active disabled{% endif %}">ISKANJE</a>
+                        <a href="{% url 'tests.upload' %}" class="navbar-item {% if url_name == 'tests.upload' %}active disabled{% endif %}">NALOŽI TEST</a>
+                        <a href="#" class="navbar-item">VIŠKI GIMNAZIJCI</a>
+                    </div>
+                    <div class="navbar-end mr-3">
+                        <div class="navbar-item buttons">
+                            <a id="facebookLogin" class="button is-primary has-text-light has-text-weight-light">
+                                PRIJAVA S FACEBOOKOM
+                            </a>
+                        </div>
+                    </div>
+                    {% endwith %}
                 </div>
-                <div class="column nav-link is-1">
-                    <a href="{% url 'tests.upload' %}" class="{% if url_name == 'tests.upload' %}active disabled{% endif %}">Naloži test</a>
-                </div>
-                <div class="column nav-link is-2">
-                    <a href="#">Viški Gimnazijci</a>
-                </div>
-                <div class="column is-2"></div>
-                <div class="column login-button is-3">Hello</div>
-                {% endwith %}
             </div>
-        </div>
-        <div class="content-container columns is-centered">
-            <div class="content column is-two-thirds">
+        </nav>
+        <div class="content-container container is-widescreen">
+            <div class="content mx-3">
                 {% block content %}
-                <h1>test</h1>
                 {% endblock content %}
             </div>
         </div>
