@@ -24,6 +24,7 @@ class Test(models.Model):
 
 
 class TestImage(models.Model):
+    # TODO: custom file field
     file = models.FileField()
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='files')
     created_at = models.DateTimeField(auto_now_add=True)

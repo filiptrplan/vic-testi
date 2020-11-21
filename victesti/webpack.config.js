@@ -57,6 +57,7 @@ module.exports = {
         contentBase: "./static/dist/",
         publicPath: "/static/",
         hot: true,
+        writeToDisk: true,
         proxy: {
             "!/static/**": {
                 target: "http://localhost:8000", // points to django dev server
