@@ -25,4 +25,10 @@
             <button class="button is-rounded is-primary has-text-light has-text-weight-light is-medium is-fullwidth">Naloži test</button>
         </div>
     </div>
+    <script>
+        let professorList = []
+        {% for professor in professors %}
+        professorList.push({id: {{professor.id}}, name: "{{professor}}"});
+        {% endfor %}
+    </script>
 {% endblock content %}
