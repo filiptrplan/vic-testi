@@ -28,5 +28,9 @@
     "prod": "yarn webpack --config webpack.config.js --mode production",
     "watch": "yarn webpack --config webpack.config.js --watch --mode development",
     "dev": "yarn webpack-dev-server"
+  },
+  "dependencies": {
+    "cash-dom": "^8.1.0",
+    "choices.js": "^9.0.1"
   }
 }

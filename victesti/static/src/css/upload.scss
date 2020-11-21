@@ -1,0 +1,47 @@
+$choices-primary-color: $dark;
+
+#uploadContainer {
+    display: block;
+    margin: auto;
+
+    .column {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #fileList {
+        ul {
+            width: 3rem;
+            .file-list-name {
+                margin: 0.25rem;
+            }
+        }
+        .choices[data-type*=select-multiple] .choices__inner{
+            cursor: default;
+            &:hover{
+                cursor: default;
+            }
+        }
+        input {
+            pointer-events: none;
+        }
+    }
+
+    #uploadBox {
+        text-align: center;
+        margin: 1rem auto;
+        box-shadow: none;
+        border: 2px dashed $primary;
+        padding: 3rem 0;
+        position: relative;
+        .uploader {
+            opacity: 0;
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}

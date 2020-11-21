@@ -1,0 +1,28 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+    Naloži nov test
+{% endblock title %}
+
+{% block content %}
+    <div id="uploadContainer" class="columns is-centered is-desktop">
+        <div class="column is-6 box" id="uploadBox">
+            <span>
+                <i class="fas fa-upload fa-lg"></i>
+            </span>
+            <input multiple type='file' class='uploader'"/>
+            <p class="has-text-weight-light">Klikni na gumb ali povleci datoteke...</p>
+        </div>
+        <div class="column is-6" id="fileList">     
+            <label for="files">Izbrane datoteke: </label>
+            <select multiple name="files" id="filesInput"></select>
+        </div>
+        <div class="column is-6" id="professorSelect">     
+            <label for="files">Profesor: </label>
+            <select name="professor" id="professorInput"></select>
+        </div>
+        <div class="column is-6 mt-3">
+            <button class="button is-rounded is-primary has-text-light has-text-weight-light is-medium is-fullwidth">Naloži test</button>
+        </div>
+    </div>
+{% endblock content %}

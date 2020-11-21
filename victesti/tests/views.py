@@ -4,5 +4,7 @@ from django.http import HttpResponse
 def search(request):
     return 'search'
 
+# Check out class views
 def upload(request):
-    return 'upload'
+    context = {};
+    return render(request, 'tests/upload.html', context)

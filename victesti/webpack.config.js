@@ -14,9 +14,10 @@ module.exports = {
     // Webpack will bundle all JavaScript into this file
     output: {
         path: path.resolve(__dirname, "static/dist"),
-        publicPath: '/static/',
+        publicPath: "/static/",
         filename: "js/app.js",
     },
+    devtool: "inline-source-map",
     module: {
         rules: [
             {
@@ -42,25 +43,25 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: "css/app.css"
+            filename: "css/app.css",
         }),
         new CopyWebpackPlugin({
             patterns: [{ from: "static/src/images", to: "images" }],
-        })
+        }),
     ],
     watchOptions: {
         poll: true,
         aggregateTimeout: 300,
     },
     devServer: {
-        contentBase: './static/dist/',
-        publicPath: '/static/',
+        contentBase: "./static/dist/",
+        publicPath: "/static/",
         hot: true,
         proxy: {
-            '!/static/**': {
-                target: 'http://localhost:8000', // points to django dev server
+            "!/static/**": {
+                target: "http://localhost:8000", // points to django dev server
                 changeOrigin: true,
-            }
-        }
-    }
+            },
+        },
+    },
 };
