@@ -33,7 +33,7 @@ const getPresignedPostData = (fileName) => {
             "Content-Type",
             "application/x-www-form-urlencoded"
         );
-        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        xhr.setRequestHeader("X-CSRFToken", csrftoken);
         xhr.send(`file_name=${fileName}`);
         xhr.onload = function () {
             resolve(JSON.parse(this.responseText));
@@ -67,11 +67,13 @@ const uploadFileToS3 = (presignedPostData, file, updateProgressBar) => {
 export default function uploadFile(file, updateProgressBar) {
     return new Promise((resolve, reject) => {
         getPresignedPostData(file.name).then((presignedPostData) => {
-            uploadFileToS3(presignedPostData, file, updateProgressBar).then(() => {
-                resolve()
-            }).catch((e) => {
-                reject(e);
-            })
+            uploadFileToS3(presignedPostData, file, updateProgressBar)
+                .then(() => {
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
     });
 }

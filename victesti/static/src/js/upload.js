@@ -20,7 +20,6 @@ $("#fileList input").on("focus", (e) => {
     e.preventDefault();
 });
 
-
 // File drag and drop functionality
 const dropbox = $("#uploadBox");
 dropbox.on("drop", (e) => {
@@ -53,7 +52,6 @@ function handleFiles(files) {
     }
 }
 
-
 // Load the choices for the professor select
 const profChoices = new Choices("#professorInput", {
     removeItemButton: false,
@@ -64,50 +62,58 @@ professorList.forEach((professor) => {
     profChoices.setChoices([{ value: professor.id, label: professor.name }]);
 });
 
-$('#testButton').on('click', () => {
+$("#testButton").on("click", () => {
     const files = fileChoices.getValue(true);
-    if (files.length != 0){
+    if (files.length != 0) {
         uploadAllFiles(files, 0);
     }
 });
 
-function uploadAllFiles(files, i){
-    if(i == 0) {
-        $('#fileProgressContainer').show()
+function uploadAllFiles(files, i) {
+    if (i == 0) {
+        $("#fileProgressContainer").show();
     }
-    if(i < files.length){
+    if (i < files.length) {
         progressBar.data("desired", "0");
         progressBar.attr("value", "0");
-        $('#fileUploadText').html(`Nalaga se: <code>${files[i].name}</code> [${i+1}/${files.length}]`);
-        uploadFile(files[i], updateProgressBar).then(() => {
-            i++;
-            uploadAllFiles(files, i);
-        }).catch((e) => {
-            console.log(e);
-            return;
-        });
+        $("#fileUploadText").html(
+            `Nalaga se: <code>${files[i].name}</code> [${i + 1}/${
+                files.length
+            }]`
+        );
+        uploadFile(files[i], updateProgressBar)
+            .then(() => {
+                i++;
+                uploadAllFiles(files, i);
+            })
+            .catch((e) => {
+                console.log(e);
+                return;
+            });
     } else {
-        $('#fileUploadText').html('Nalaganje končano!');
+        $("#fileUploadText").html("Nalaganje končano!");
         return;
     }
 }
 
 let progressAnimationSpeed = 2;
-const progressBar = $('#fileUploadBar');
+const progressBar = $("#fileUploadBar");
 
-function updateProgressBar(e){
-    if (e.lengthComputable) 
-    {  
-        let percentComplete = (e.loaded / e.total) * 100;  
+function updateProgressBar(e) {
+    if (e.lengthComputable) {
+        let percentComplete = (e.loaded / e.total) * 100;
         $("#fileUploadBar").data("desired", percentComplete.toString());
     }
 }
 
 setInterval(() => {
-    let progressComplete = parseFloat(progressBar.data('desired'));
-    let progressCurrent = parseFloat(progressBar.attr('value'));
-    if(progressComplete !== progressCurrent){
-        if(Math.abs(progressCurrent - progressComplete) > progressAnimationSpeed){
+    let progressComplete = parseFloat(progressBar.data("desired"));
+    let progressCurrent = parseFloat(progressBar.attr("value"));
+    if (progressComplete !== progressCurrent) {
+        if (
+            Math.abs(progressCurrent - progressComplete) >
+            progressAnimationSpeed
+        ) {
             progressCurrent += progressAnimationSpeed;
         } else {
             progressCurrent = progressComplete;
