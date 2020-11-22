@@ -81,7 +81,6 @@ function uploadAllFiles(files, i){
         $('#fileUploadText').html(`Nalaga se: <code>${files[i].name}</code> [${i+1}/${files.length}]`);
         uploadFile(files[i], updateProgressBar).then(() => {
             i++;
-            console.log('UPLOAD: next');
             uploadAllFiles(files, i);
         }).catch((e) => {
             console.log(e);
@@ -112,7 +111,6 @@ setInterval(() => {
             progressCurrent += progressAnimationSpeed;
         } else {
             progressCurrent = progressComplete;
-            console.log('PROGRESS: done');
         }
         progressBar.attr("value", progressCurrent.toString());
     }
