@@ -30,5 +30,8 @@
         {% for professor in professors %}
         professorList.push({id: {{professor.id}}, name: "{{professor}}"});
         {% endfor %}
+        const s3signatureURL = "{% url 'tests.signature' %}"
     </script>
+    {% csrf_token %}
+    <button id="testButton">Test upload</button>
 {% endblock content %}

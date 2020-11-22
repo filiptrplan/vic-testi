@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    's3direct',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +132,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT= '/media/'
 
 # The AWS region to connect to.
-AWS_S3_REGION_NAME = os.getenv('AWS_REGION')
+AWS_REGION_NAME = os.getenv('AWS_REGION')
 
 # The AWS access key to use.
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
@@ -141,4 +140,6 @@ AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 # The AWS secret access key to use.
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
+AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
+
+AWS_KEY_NAME = os.getenv('AWS_KEY_NAME')

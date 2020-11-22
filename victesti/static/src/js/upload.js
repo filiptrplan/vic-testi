@@ -1,5 +1,6 @@
 import Choices from "choices.js";
 import $ from "cash-dom";
+import uploadFiles from "./s3upload";
 // File input selectize
 const fileChoices = new Choices("#filesInput", {
     removeItems: true,
@@ -61,4 +62,8 @@ const profChoices = new Choices("#professorInput", {
 
 professorList.forEach((professor) => {
     profChoices.setChoices([{ value: professor.id, label: professor.name }]);
+});
+
+$('#testButton').on('click', () => {
+    uploadFiles(fileChoices.getValue(true)[0]);
 });
