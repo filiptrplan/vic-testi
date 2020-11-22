@@ -46,7 +46,7 @@ const getPresignedPostData = (fileName) => {
  * @param file
  * @returns {Promise<any>}
  */
-const uploadFileToS3 = (presignedPostData, file) => {
+const uploadFileToS3 = (presignedPostData, file, updateProgressBar) => {
     return new Promise((resolve, reject) => {
         const formData = new FormData();
         Object.keys(presignedPostData.fields).forEach((key) => {
@@ -55,6 +55,7 @@ const uploadFileToS3 = (presignedPostData, file) => {
         // Actual file has to be appended last.
         formData.append("file", file);
         const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", updateProgressBar);
         xhr.open("POST", presignedPostData.url, true);
         xhr.send(formData);
         xhr.onload = function () {
@@ -63,12 +64,14 @@ const uploadFileToS3 = (presignedPostData, file) => {
     });
 };
 
-export default async function uploadFiles(file) {
-    const presignedPostData = await getPresignedPostData(file.name);
-    try {
-        await uploadFileToS3(presignedPostData, file);
-        console.log("File was successfully uploaded!");
-    } catch (e) {
-        console.log("An error occurred!", e.message);
-    }
+export default function uploadFile(file, updateProgressBar) {
+    return new Promise((resolve, reject) => {
+        getPresignedPostData(file.name).then((presignedPostData) => {
+            uploadFileToS3(presignedPostData, file, updateProgressBar).then(() => {
+                resolve()
+            }).catch((e) => {
+                reject(e);
+            })
+        });
+    });
 }

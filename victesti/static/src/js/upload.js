@@ -1,6 +1,6 @@
 import Choices from "choices.js";
 import $ from "cash-dom";
-import uploadFiles from "./s3upload";
+import uploadFile from "./s3upload";
 // File input selectize
 const fileChoices = new Choices("#filesInput", {
     removeItems: true,
@@ -65,5 +65,55 @@ professorList.forEach((professor) => {
 });
 
 $('#testButton').on('click', () => {
-    uploadFiles(fileChoices.getValue(true)[0]);
+    const files = fileChoices.getValue(true);
+    if (files.length != 0){
+        uploadAllFiles(files, 0);
+    }
 });
+
+function uploadAllFiles(files, i){
+    if(i == 0) {
+        $('#fileProgressContainer').show()
+    }
+    if(i < files.length){
+        progressBar.data("desired", "0");
+        progressBar.attr("value", "0");
+        $('#fileUploadText').html(`Nalaga se: <code>${files[i].name}</code> [${i+1}/${files.length}]`);
+        uploadFile(files[i], updateProgressBar).then(() => {
+            i++;
+            console.log('UPLOAD: next');
+            uploadAllFiles(files, i);
+        }).catch((e) => {
+            console.log(e);
+            return;
+        });
+    } else {
+        $('#fileUploadText').html('Nalaganje končano!');
+        return;
+    }
+}
+
+let progressAnimationSpeed = 2;
+const progressBar = $('#fileUploadBar');
+
+function updateProgressBar(e){
+    if (e.lengthComputable) 
+    {  
+        let percentComplete = (e.loaded / e.total) * 100;  
+        $("#fileUploadBar").data("desired", percentComplete.toString());
+    }
+}
+
+setInterval(() => {
+    let progressComplete = parseFloat(progressBar.data('desired'));
+    let progressCurrent = parseFloat(progressBar.attr('value'));
+    if(progressComplete !== progressCurrent){
+        if(Math.abs(progressCurrent - progressComplete) > progressAnimationSpeed){
+            progressCurrent += progressAnimationSpeed;
+        } else {
+            progressCurrent = progressComplete;
+            console.log('PROGRESS: done');
+        }
+        progressBar.attr("value", progressCurrent.toString());
+    }
+}, 5);
