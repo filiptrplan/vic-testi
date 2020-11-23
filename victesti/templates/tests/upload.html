@@ -42,4 +42,6 @@
         const createTestURL = "{% url 'tests.create' %}";
     </script>
     {% csrf_token %}
+    {% load static %}
+    <script src="{% static 'js/upload.bundle.js' %}"></script>
 {% endblock content %}

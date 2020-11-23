@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import Choices from "choices.js";
 import $ from "cash-dom";
 import uploadFile from "./s3upload";

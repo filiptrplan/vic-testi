@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.generic.detail import DetailView
 from tests.models import Professor, TestImage, Test
 import tests.upload
 
@@ -10,6 +11,13 @@ def search(request):
     Serves the search template
     """
     return 'search'
+
+class TestDetailView(DetailView):
+    model = Test
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['files'] = TestImage.objects.filter(test=self.get_object())
+        return context
 
 # Check out class views
 def upload(request):

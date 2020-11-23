@@ -32,3 +32,5 @@ class TestImage(models.Model):
     file = models.URLField()
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='files')
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.file
