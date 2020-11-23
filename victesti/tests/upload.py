@@ -20,11 +20,13 @@ s3 = boto3.client(
 def generate_post_signature(key_name, file_name):
     post = s3.generate_presigned_post(
         Fields={
-            'Content-Type': 'image/jpeg'
+            'Content-Type': 'image/jpeg,image/png',
+            'acl': 'public-read'
         },
         Conditions=[
              ["content-length-range", 200, 10000000],
-             ["starts-with", "$Content-Type", ""]
+             ["starts-with", "$Content-Type", "image/"],
+             {"acl": "public-read"}
         ],
         Bucket=settings.AWS_BUCKET_NAME,
         Key=key_name + '/' + file_name

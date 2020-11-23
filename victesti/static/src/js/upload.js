@@ -1,6 +1,7 @@
 import Choices from "choices.js";
 import $ from "cash-dom";
 import uploadFile from "./s3upload";
+import ajax from "./ajax";
 // File input selectize
 const fileChoices = new Choices("#filesInput", {
     removeItems: true,
@@ -45,8 +46,8 @@ dropbox.on("dragenter", preventFunc);
 dropbox.on("dragover", preventFunc);
 
 function handleFiles(files) {
-    console.log(files);
     fileChoices.clearStore();
+    fileLocations = [];
     for (let i = 0; i < files.length; i++) {
         fileChoices.setValue([{ value: files[i], label: files[i].name }]);
     }
@@ -62,11 +63,44 @@ professorList.forEach((professor) => {
     profChoices.setChoices([{ value: professor.id, label: professor.name }]);
 });
 
-$("#testButton").on("click", () => {
+// Choices for year
+const yearChoices = new Choices("#yearInput", {
+    placeholder: true,
+    placeholderValue: "Letnik",
+    searchEnabled: false,
+});
+
+// Have to do this this way in order to have no default
+yearChoices.setChoices([
+    { value: 1, label: "1. letnik", selected: false },
+    { value: 2, label: "2. letnik", selected: false },
+    { value: 3, label: "3. letnik", selected: false },
+    { value: 4, label: "4. letnik", selected: false },
+]);
+
+$("#uploadButton").on("click", () => {
     const files = fileChoices.getValue(true);
     if (files.length != 0) {
         uploadAllFiles(files, 0);
+        
     }
+});
+
+let fileLocations = [];
+const uploadFinishEvent = new Event('upload-finished');
+document.addEventListener("upload-finished", () => {
+    let parameters = {
+        professorId: profChoices.getValue(true),
+        fileLocations: fileLocations,
+        year: yearChoices.getValue(true)
+    };
+    ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then((text, status) => {
+        if(status == 200){
+            // Success
+        } else {
+            // Failed
+        }
+    });
 });
 
 function uploadAllFiles(files, i) {
@@ -82,7 +116,8 @@ function uploadAllFiles(files, i) {
             }]`
         );
         uploadFile(files[i], updateProgressBar)
-            .then(() => {
+            .then((location) => {
+                fileLocations.push(location);
                 i++;
                 uploadAllFiles(files, i);
             })
@@ -92,6 +127,7 @@ function uploadAllFiles(files, i) {
             });
     } else {
         $("#fileUploadText").html("Nalaganje končano!");
+        document.dispatchEvent(uploadFinishEvent);
         return;
     }
 }
@@ -106,6 +142,7 @@ function updateProgressBar(e) {
     }
 }
 
+// Animate progress bar
 setInterval(() => {
     let progressComplete = parseFloat(progressBar.data("desired"));
     let progressCurrent = parseFloat(progressBar.attr("value"));
@@ -121,3 +158,22 @@ setInterval(() => {
         progressBar.attr("value", progressCurrent.toString());
     }
 }, 5);
+
+
+export default function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

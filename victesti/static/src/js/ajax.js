@@ -4,7 +4,13 @@ export default function ajax(method, url, parameters, csrftoken, progressCallbac
         if(method.toLowerCase() == "post"){
             let paramString = "";
             for (const param in parameters) {
-                paramString += `${param}=${parameters[param]}&`;
+                if (Array.isArray(parameters[param])) {
+                    parameters[param].forEach((value) => {
+                        paramString += `${param}=${value}&`;
+                    });
+                } else {
+                    paramString += `${param}=${parameters[param]}&`;
+                }
             }
             paramString = paramString.slice(0, -1);
             
@@ -18,12 +24,18 @@ export default function ajax(method, url, parameters, csrftoken, progressCallbac
 
             xhr.send(paramString);
             xhr.onload = function () {
-                resolve(this.responseText);
+                resolve(this.responseText, this.status);
             };
         } else if (method.toLowerCase() == "get") {
             let paramString = "";
             for (const param in parameters) {
-                paramString += `${param}=${parameters[param]}&`;
+                if(Array.isArray(parameters[param])) {
+                    parameters[param].forEach(value => {
+                        paramString += `${param}[]=${value}&`;
+                    });
+                } else {
+                    paramString += `${param}=${parameters[param]}&`;
+                }
             }
             paramString = paramString.slice(0, -1);
 
@@ -36,7 +48,7 @@ export default function ajax(method, url, parameters, csrftoken, progressCallbac
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
             xhr.send();
             xhr.onload = function () {
-                resolve(this.responseText);
+                resolve(this.responseText, this.status);
             };
         }
     });

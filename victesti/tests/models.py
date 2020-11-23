@@ -2,11 +2,13 @@ from django.db import models
 
 # Create your models here.
 class Subject(models.Model):
+    """Subject model: only contains name"""
     name = models.CharField(max_length=20)
     def __str__(self):
         return self.name
 
 class Professor(models.Model):
+    """Professor model: contains name and the teaching subject"""
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=30)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -14,7 +16,9 @@ class Professor(models.Model):
         return self.first_name + ' ' + self.last_name
 
 class Test(models.Model):
+    """Test model: contains year, professor"""
     class Year(models.IntegerChoices):
+        """Choices for the Test.year field: goes from year 1 to year 4"""
         YEAR1 = 1
         YEAR2 = 2
         YEAR3 = 3
@@ -24,7 +28,7 @@ class Test(models.Model):
 
 
 class TestImage(models.Model):
-    # TODO: custom file field
-    file = models.FileField()
+    """TestImage model: contains the file URL and the test"""
+    file = models.URLField()
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='files')
     created_at = models.DateTimeField(auto_now_add=True)

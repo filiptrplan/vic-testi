@@ -22,11 +22,15 @@
             <select multiple name="files" id="filesInput"></select>
         </div>
         <div class="column is-6" id="professorSelect">     
-            <label for="files">Profesor: </label>
+            <label for="professor">Profesor: </label>
             <select name="professor" id="professorInput"></select>
         </div>
+        <div class="column is-6" id="professorSelect">     
+            <label for="year">Letnik: </label>
+            <select name="year" id="yearInput"></select>
+        </div>
         <div class="column is-6 mt-3">
-            <button class="button is-rounded is-primary has-text-light has-text-weight-light is-medium is-fullwidth">Naloži test</button>
+            <button id="uploadButton" class="button is-rounded is-primary has-text-light has-text-weight-light is-medium is-fullwidth">Naloži test</button>
         </div>
     </div>
     <script>
@@ -35,7 +39,7 @@
         professorList.push({id: {{professor.id}}, name: "{{professor}}"});
         {% endfor %}
         const s3signatureURL = "{% url 'tests.signature' %}"
+        const createTestURL = "{% url 'tests.create' %}";
     </script>
     {% csrf_token %}
-    <button id="testButton">Test upload</button>
 {% endblock content %}

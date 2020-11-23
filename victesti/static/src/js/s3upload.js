@@ -1,24 +1,8 @@
 import { sha256 } from "js-sha256";
 import "./ajax";
 import ajax from "./ajax";
+import getCookie from "./upload";
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === name + "=") {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 const csrftoken = getCookie("csrftoken");
 
 /**
@@ -57,12 +41,15 @@ const uploadFileToS3 = (presignedPostData, file, updateProgressBar) => {
         });
         // Actual file has to be appended last.
         formData.append("file", file);
+
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", updateProgressBar);
         xhr.open("POST", presignedPostData.url, true);
         xhr.send(formData);
         xhr.onload = function () {
-            this.status === 204 ? resolve() : reject(this.responseText);
+            this.status === 204
+                ? resolve(this.getResponseHeader("Location"))
+                : reject(this.responseText);
         };
     });
 };
@@ -71,8 +58,8 @@ export default function uploadFile(file, updateProgressBar) {
     return new Promise((resolve, reject) => {
         getPresignedPostData(file).then((presignedPostData) => {
             uploadFileToS3(presignedPostData, file, updateProgressBar)
-                .then(() => {
-                    resolve();
+                .then((location) => {
+                    resolve(location);
                 })
                 .catch((e) => {
                     reject(e);
