@@ -1,5 +1,6 @@
-import "js-sha256";
 import { sha256 } from "js-sha256";
+import "./ajax";
+import ajax from "./ajax";
 
 function getCookie(name) {
     let cookieValue = null;
@@ -26,8 +27,6 @@ const csrftoken = getCookie("csrftoken");
  */
 const getPresignedPostData = (file) => {
     return new Promise((resolve) => {
-        const xhr = new XMLHttpRequest();
-
         // Set the proper URL here. Is set on the HTML template
         const url = s3signatureURL;
 
@@ -37,18 +36,10 @@ const getPresignedPostData = (file) => {
             let arrayBuffer = fileReader.result;
             let fileHash = sha256(arrayBuffer);
             let fileName = fileHash + '.' + file.name.split(".").pop();
-            console.log(fileName);
-            
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader(
-                "Content-Type",
-                "application/x-www-form-urlencoded"
-            );
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            xhr.send(`file_name=${fileName}`);
-            xhr.onload = function () {
-                resolve(JSON.parse(this.responseText));
-            };
+
+            ajax('POST', url, { file_name: fileName }, csrftoken).then((responseText)=>{
+                resolve(JSON.parse(responseText));
+            });
         }
     });
 };
