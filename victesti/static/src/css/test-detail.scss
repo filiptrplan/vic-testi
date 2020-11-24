@@ -1,0 +1,32 @@
+$glide-height: 600px;
+
+.glide {
+    height: $glide-height;
+    width: 80%;
+    margin: auto;
+    .glide__track {
+        height: $glide-height;
+        ul {
+            list-style: none;
+        }
+    }
+    .glide__arrow {
+        &--right {
+            right: -5em;
+        }
+        &--left {
+            left: -5em;
+        }
+        color: black;
+        border: none;
+        box-shadow: none; 
+    }
+    .glide__slide {
+        height: $glide-height;
+        .gallery-image {
+            height: $glide-height;
+            object-fit: cover;
+        }
+    }
+
+}

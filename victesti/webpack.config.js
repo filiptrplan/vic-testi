@@ -15,11 +15,15 @@ module.exports = {
             import: "./static/src/js/base.js",
             dependOn: "shared",
         },
+        testDetail: {
+            import: "./static/src/js/test-detail.js",
+            dependOn: "shared",
+        },
         upload: {
             import: "./static/src/js/upload.js",
-            dependOn: "shared"
+            dependOn: "shared",
         },
-        shared: 'cash-dom'
+        shared: "cash-dom",
     },
 
     // Path and filename of your result bundle.
@@ -47,6 +51,7 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader",
+                    "resolve-url-loader",
                     "sass-loader",
                 ],
             },
@@ -67,8 +72,8 @@ module.exports = {
     devServer: {
         contentBase: "./static/dist/",
         publicPath: "/static/",
-        hot: true,
         writeToDisk: true,
+        hot: true,
         proxy: {
             "!/static/**": {
                 target: "http://localhost:8000", // points to django dev server

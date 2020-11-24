@@ -1,7 +1,25 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-    {% for file in files %}
-        {{file}}
-    {% endfor %}
+    <div class="glide">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                {% for file in files %}
+                    <li class="glide__slide columns is-vcentered is-centered"><img src="{{file}}" class="column gallery-image"></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="glide__arrows" data-glide-el="controls">
+            <button class="glide__arrow glide__arrow--left" data-glide-dir="<"><i class="fas fa-4x fa-chevron-left"></i></button>
+            <button class="glide__arrow glide__arrow--right" data-glide-dir=">"><i class="fas fa-4x fa-chevron-right"></i></button>
+        </div>
+        <div class="glide__bullets" data-glide-el="controls[nav]">
+            {% for file in files %}
+                <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}"></button>
+            {% endfor %}
+            
+        </div>
+    </div>
+    {% load static %}
+    <script src="{% static 'js/testDetail.bundle.js' %}"></script>
 {% endblock content %}
