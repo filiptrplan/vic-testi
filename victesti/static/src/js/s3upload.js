@@ -21,8 +21,8 @@ const getPresignedPostData = (file) => {
             let fileHash = sha256(arrayBuffer);
             let fileName = fileHash + '.' + file.name.split(".").pop();
 
-            ajax('POST', url, { file_name: fileName }, csrftoken).then((responseText)=>{
-                resolve(JSON.parse(responseText));
+            ajax('POST', url, { file_name: fileName }, csrftoken).then((xhr)=>{
+                resolve(JSON.parse(xhr.responseText));
             });
         }
     });

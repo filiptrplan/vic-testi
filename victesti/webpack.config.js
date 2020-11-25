@@ -84,4 +84,10 @@ module.exports = {
     optimization: {
         runtimeChunk: "single",
     },
+    resolve: {
+        fallback: {
+            stream: require.resolve("stream-browserify"),
+            buffer: require.resolve("buffer/"),
+        },
+    },
 };

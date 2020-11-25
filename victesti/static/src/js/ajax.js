@@ -1,55 +1,35 @@
-export default function ajax(method, url, parameters, csrftoken, progressCallback=()=>{}) {
+export default function ajax(method, url, parameters=[], csrftoken='', responseType='', progressCallback=()=>{}) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        if(method.toLowerCase() == "post"){
-            let paramString = "";
-            for (const param in parameters) {
-                if (Array.isArray(parameters[param])) {
-                    parameters[param].forEach((value) => {
-                        paramString += `${param}=${value}&`;
-                    });
-                } else {
-                    paramString += `${param}=${parameters[param]}&`;
-                }
+        let paramString = "";
+        for (const param in parameters) {
+            if (Array.isArray(parameters[param])) {
+                parameters[param].forEach((value) => {
+                    paramString += `${param}=${value}&`;
+                });
+            } else {
+                paramString += `${param}=${parameters[param]}&`;
             }
-            paramString = paramString.slice(0, -1);
-            
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader(
-                "Content-Type",
-                "application/x-www-form-urlencoded"
-            );
-            xhr.upload.addEventListener("progress", progressCallback);
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-
-            xhr.send(paramString);
-            xhr.onload = function () {
-                resolve(this.responseText, this.status);
-            };
-        } else if (method.toLowerCase() == "get") {
-            let paramString = "";
-            for (const param in parameters) {
-                if(Array.isArray(parameters[param])) {
-                    parameters[param].forEach(value => {
-                        paramString += `${param}[]=${value}&`;
-                    });
-                } else {
-                    paramString += `${param}=${parameters[param]}&`;
-                }
-            }
-            paramString = paramString.slice(0, -1);
-
-            xhr.open("GET", url+'?'+paramString, true);
-            xhr.setRequestHeader(
-                "Content-Type",
-                "application/x-www-form-urlencoded"
-            );
-            xhr.upload.addEventListener("progress", progressCallback);
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            xhr.send();
-            xhr.onload = function () {
-                resolve(this.responseText, this.status);
-            };
         }
+        paramString = paramString.slice(0, -1);
+
+        if(method.toLowerCase() == "post") xhr.open("POST", url, true);
+        else if (method.toLowerCase() == "get") xhr.open("GET", url + "?" + paramString, true);
+
+        xhr.setRequestHeader(
+            "Content-Type",
+            "application/x-www-form-urlencoded"
+        );
+        xhr.upload.addEventListener("progress", progressCallback);
+        if(csrftoken != '') xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        if(responseType != '') xhr.responseType = responseType;
+
+
+        if(method.toLowerCase() == "post") xhr.send(paramString);
+        else if (method.toLowerCase() == "get") xhr.send();
+
+        xhr.onload = function () {
+            resolve(this);
+        };
     });
 }

@@ -95,8 +95,8 @@ document.addEventListener("upload-finished", () => {
         fileLocations: fileLocations,
         year: yearChoices.getValue(true)
     };
-    ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then((text, status) => {
-        if(status == 200){
+    ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then((xhr) => {
+        if(xhr.status == 200){
             // Success
         } else {
             // Failed
