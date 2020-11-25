@@ -3,14 +3,21 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.detail import DetailView
-from tests.models import Professor, TestImage, Test
+from tests.models import Professor, TestImage, Test, Subject
 import tests.upload
 
 def search(request):
     """
-    Serves the search template
+    Serves the search template, provides professors as context
     """
-    return 'search'
+    professors = Professor.objects.all()
+    subjects = Subject.objects.all()
+    context = { "professors": professors, "subjects": subjects }
+    return render(request, 'tests/search.html', context)
+
+
+def search_ajax(request):
+    return
 
 class TestDetailView(DetailView):
     model = Test

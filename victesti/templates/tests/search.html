@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="columns is-centered">
+    <div class="mt-4 column is-8">
+        <div class="field has-addons" id="searchBar">
+            <p id="searchInputContainer" class="control has-icons-left has-icons-right">
+                <input class="input" type="search" placeholder="Išči test, letnik, profesorja, predmet...">
+                <span class="icon is-small is-left">
+                <i class="fas fa-search"></i>
+                </span>
+            </p>
+            <div class="control">
+                <button class="button is-primary has-text-light has-text-weight-light">
+                    Išči
+                </button>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-4" id="professorSelect">     
+                <label for="professor">Profesor: </label>
+                <select name="professor" id="professorInput"></select>
+            </div>
+            <div class="column is-4" id="yearSelect">     
+                <label for="year">Letnik: </label>
+                <select name="year" id="yearInput"></select>
+            </div>
+            <div class="column is-4" id="subjectSelect">     
+                <label for="subject">Predmet: </label>
+                <select name="subject" id="subjectInput"></select>
+            </div>
+        </div>
+       
+    </div>
+
+</div>
+
+<script>
+    let professorList = []
+    {% for professor in professors %}
+    professorList.push({id: {{professor.id}}, name: "{{professor}}"});
+    {% endfor %}
+    let subjectList = []
+    {% for subject in subjects %}
+    subjectList.push({id: {{subject.id}}, name: "{{subject}}"});
+    {% endfor %}
+    const s3signatureURL = "{% url 'tests.signature' %}"
+    const createTestURL = "{% url 'tests.create' %}";
+</script>
+{% csrf_token %}
+{% load static %}
+<script src="{% static 'js/choicesJS.bundle.js' %}"></script>
+<script src="{% static 'js/search.bundle.js' %}"></script>
+{% endblock content %}

@@ -25,7 +25,7 @@
             <label for="professor">Profesor: </label>
             <select name="professor" id="professorInput"></select>
         </div>
-        <div class="column is-6" id="professorSelect">     
+        <div class="column is-6" id="yearSelect">     
             <label for="year">Letnik: </label>
             <select name="year" id="yearInput"></select>
         </div>
@@ -43,5 +43,6 @@
     </script>
     {% csrf_token %}
     {% load static %}
+    <script src="{% static 'js/choicesJS.bundle.js' %}"></script>
     <script src="{% static 'js/upload.bundle.js' %}"></script>
 {% endblock content %}

@@ -21,9 +21,14 @@ module.exports = {
         },
         upload: {
             import: "./static/src/js/upload.js",
-            dependOn: "shared",
+            dependOn: ["shared", "choicesJS"]
+        },
+        search: {
+            import: "./static/src/js/search.js",
+            dependOn: ["shared", "choicesJS"]
         },
         shared: "cash-dom",
+        choicesJS: "choices.js"
     },
 
     // Path and filename of your result bundle.
