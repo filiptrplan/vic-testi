@@ -2,4 +2,6 @@
 import $ from "cash-dom";
 import Glide from "@glidejs/glide";
 
-new Glide(".glide").mount();
+$(document).ready(() => {
+    new Glide(".glide").mount();
+});

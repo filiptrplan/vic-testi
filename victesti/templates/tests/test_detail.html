@@ -1,11 +1,20 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+<div class="test-info">
+    <div class="has-text-left">
+        <p><strong>Profesor: </strong> {{ test.professor}} ({{test.professor.subject}}) </p>
+    </div>
+    <div class="has-text-right">
+        <p><strong>Letnik: </strong> {{ test.year}}. letnik </p>
+    </div>
+</div>
+<div class="glide-container">
     <div class="glide">
         <div class="glide__track" data-glide-el="track">
             <ul class="glide__slides">
                 {% for file in files %}
-                    <li class="glide__slide columns is-vcentered is-centered"><img src="{{file}}" class="column gallery-image"></li>
+                    <li class="glide__slide"><img src="{{file}}" class=" gallery-image"></li>
                 {% endfor %}
             </ul>
         </div>
@@ -20,6 +29,12 @@
             
         </div>
     </div>
-    {% load static %}
-    <script src="{% static 'js/testDetail.bundle.js' %}"></script>
+</div>
+    <div id="imageButtons" class="mt-6 buttons is-centered">
+        <button class="button mx-3 is-black has-text-weight-light is-medium">Odpri sliko</button>
+        <button class="button mx-3 is-black has-text-weight-light is-medium">Prenesi test</button>
+        <button class="button mx-3 is-black has-text-weight-light is-medium">Sprintaj test</button>
+    </div>
+{% load static %}
+<script src="{% static 'js/testDetail.bundle.js' %}"></script>
 {% endblock content %}

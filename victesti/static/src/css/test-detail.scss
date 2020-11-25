@@ -6,8 +6,10 @@ $glide-height: 600px;
     margin: auto;
     .glide__track {
         height: $glide-height;
-        ul {
+        .glide__slides {
             list-style: none;
+            margin-left: 0;
+            margin-top: 0;
         }
     }
     .glide__arrow {
@@ -24,9 +26,30 @@ $glide-height: 600px;
     .glide__slide {
         height: $glide-height;
         .gallery-image {
+            display: block;
             height: $glide-height;
-            object-fit: cover;
+            object-fit: contain;
+            margin: auto;
         }
     }
 
+}
+
+.test-info {
+    width: 100%;
+    display: inline-block;
+    .has-text-left {
+        display: inline;
+        float: left;
+    }
+    .has-text-right {
+        display: inline;
+        float: right;
+    }
+}
+
+#imageButtons {
+    margin: auto;
+    .button {
+    }
 }
