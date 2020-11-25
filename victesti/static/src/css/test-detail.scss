@@ -38,14 +38,33 @@ $glide-height: 600px;
 .test-info {
     width: 100%;
     display: inline-block;
-    .has-text-left {
-        display: inline;
-        float: left;
+    @include until($tablet) {
+        .has-text-left {
+            display: block;
+            float: left;
+        }
+        .has-text-right {
+            display: block;
+            float: left;
+        }
+        .line-break {
+            display: block;
+        }
     }
-    .has-text-right {
-        display: inline;
-        float: right;
+    @include from($tablet) {
+        .has-text-left {
+            display: inline;
+            float: left;
+        }
+        .has-text-right {
+            display: inline;
+            float: right;
+        }
+        .line-break {
+            display: none;
+        }
     }
+
 }
 
 #imageButtons {

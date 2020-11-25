@@ -42,6 +42,9 @@ $('#printTestButton').on('click', () => {
     popup.document.close();
     popup.focus(); //required for IE
     popup.print();
+    setTimeout(() => {
+        popup.close()
+    }, 1000);
 });
 
 function download(url) {
