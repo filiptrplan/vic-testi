@@ -4,7 +4,7 @@
 <div class="columns is-centered">
     <div class="mt-4 column is-8">
         <div class="field has-addons" id="searchBar">
-            <p id="searchInputContainer" class="control has-icons-left has-icons-right">
+            <p id="searchInputContainer" class="control is-expanded has-icons-left has-icons-right">
                 <input class="input" type="search" placeholder="Išči test, letnik, profesorja, predmet...">
                 <span class="icon is-small is-left">
                 <i class="fas fa-search"></i>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="my-5">
-            <div class="search-result professor-result columns mt-3 p-2">
+            <div class="search-result professor-result columns p-2">
                 <div class="column is-6 has-text-left">
                     <h3 class="title">Alenka Mozer</h3>
                     <p class="subtitle is-6 has-text-weight-light">Profesor</p>
@@ -41,8 +41,8 @@
                 </div>
             </div>
         </div>
-        <div class="my-5">
-            <div class="search-result test-result columns mt-3 p-2">
+        <div class="my-5 search-result">
+            <div class="test-result columns p-2">
                 <div class="column is-6 has-text-left">
                     <h3 class="title">Alenka Mozer - 3. letnik</h3>
                     <p class="subtitle is-6 has-text-weight-light">Test</p>
@@ -50,6 +50,12 @@
                 <div class="column is-6 has-text-right">
                     <span class="fas fa-chevron-down"></span>
                 </div>
+            </div>
+            <div class="test-dropdown columns">
+                <input type="hidden" name="testId" value="5">
+                <button class="openTestButton column button m-3 is-black has-text-centered has-text-weight-light is-medium">Odpri test</button>
+                <button class="downloadTestButton column button m-3 is-black has-text-weight-light is-medium">Prenesi test</button>
+                <button class="printTestButton column button m-3 is-black has-text-weight-light is-medium">Sprintaj test</button>
             </div>
         </div>
     </div>
@@ -70,5 +76,6 @@
 {% csrf_token %}
 {% load static %}
 <script src="{% static 'js/choicesJS.bundle.js' %}"></script>
+<script src="{% static 'js/downloadTest.bundle.js' %}"></script>
 <script src="{% static 'js/search.bundle.js' %}"></script>
 {% endblock content %}

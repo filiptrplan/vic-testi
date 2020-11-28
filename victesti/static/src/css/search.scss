@@ -1,12 +1,22 @@
 $search-result-bg: $white-ter;
 
-#searchBar {
-    #searchInputContainer {
-        width: 100%;
-    }
-}
-
 .search-result {
     background-color: $search-result-bg;
     color: #4a4a4a;
+    .test-result {
+        background-color: $search-result-bg;
+        margin-bottom: 0;
+    }
+    .test-dropdown {
+        background-color: $main-bg-color;
+        padding: 0.75em;
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+        .button {
+            margin-bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
 }

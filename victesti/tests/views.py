@@ -26,6 +26,16 @@ class TestDetailView(DetailView):
         context['files'] = TestImage.objects.filter(test=self.get_object())
         return context
 
+def test_links(request, pk):
+    # Ali pa Test.objects.get(pk=pk).test_image_set.all()
+    images=TestImage.objects.filter(test__id=pk).values_list('file')
+    files=[]
+    for image in list(images):
+        files.append(image[0])
+    
+    return JsonResponse({'links': files})
+
+
 # Check out class views
 def upload(request):
     """

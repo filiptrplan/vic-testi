@@ -17,7 +17,7 @@ module.exports = {
         },
         testDetail: {
             import: "./static/src/js/test-detail.js",
-            dependOn: "shared",
+            dependOn: ["shared", "downloadTest"],
         },
         upload: {
             import: "./static/src/js/upload.js",
@@ -25,10 +25,13 @@ module.exports = {
         },
         search: {
             import: "./static/src/js/search.js",
-            dependOn: ["shared", "choicesJS"]
+            dependOn: ["shared", "choicesJS", "downloadTest"]
+        },
+        downloadTest: {
+            import: "./static/src/js/downloadTest.js"
         },
         shared: "cash-dom",
-        choicesJS: "choices.js"
+        choicesJS: "choices.js",
     },
 
     // Path and filename of your result bundle.

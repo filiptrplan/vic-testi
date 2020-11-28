@@ -1,8 +1,7 @@
 import $ from "cash-dom";
 import Choices from "choices.js";
 import ajax from "./ajax";
-
-console.log('hi');
+import { downloadAndZip } from "./downloadTest";
 
 // Load the choices for the professor select
 const profChoices = new Choices("#professorInput", {
@@ -39,3 +38,8 @@ yearChoices.setChoices([
     { value: 3, label: "3. letnik", selected: false },
     { value: 4, label: "4. letnik", selected: false },
 ]);
+
+$('.openTestButton').on('click', (e) => {
+    console.log($(e.target).siblings('input[type="hidden"]').value);
+    console.log('hdasdaasadadsasdasdda');
+})
