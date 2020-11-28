@@ -13,25 +13,16 @@ module.exports = {
         index: "./static/src/index.js",
         base: {
             import: "./static/src/js/base.js",
-            dependOn: "shared",
         },
         testDetail: {
             import: "./static/src/js/test-detail.js",
-            dependOn: ["shared", "downloadTest"],
         },
         upload: {
             import: "./static/src/js/upload.js",
-            dependOn: ["shared", "choicesJS"]
         },
         search: {
             import: "./static/src/js/search.js",
-            dependOn: ["shared", "choicesJS", "downloadTest"]
         },
-        downloadTest: {
-            import: "./static/src/js/downloadTest.js"
-        },
-        shared: "cash-dom",
-        choicesJS: "choices.js",
     },
 
     // Path and filename of your result bundle.

@@ -52,10 +52,21 @@
                 </div>
             </div>
             <div class="test-dropdown columns">
-                <input type="hidden" name="testId" value="5">
+                <input type="hidden" name="testId" value="1">
                 <button class="openTestButton column button m-3 is-black has-text-centered has-text-weight-light is-medium">Odpri test</button>
                 <button class="downloadTestButton column button m-3 is-black has-text-weight-light is-medium">Prenesi test</button>
                 <button class="printTestButton column button m-3 is-black has-text-weight-light is-medium">Sprintaj test</button>
+            </div>
+        </div>
+        <div class="my-5">
+            <div class="search-result professor-result columns p-2">
+                <div class="column is-6 has-text-left">
+                    <h3 class="title">Alenka Mozer</h3>
+                    <p class="subtitle is-6 has-text-weight-light">Profesor</p>
+                </div>
+                <div class="column is-6 has-text-right">
+                    <p class="has-text-weight-light">Št. testov: 13</p>
+                </div>
             </div>
         </div>
     </div>
@@ -75,7 +86,5 @@
 </script>
 {% csrf_token %}
 {% load static %}
-<script src="{% static 'js/choicesJS.bundle.js' %}"></script>
-<script src="{% static 'js/downloadTest.bundle.js' %}"></script>
 <script src="{% static 'js/search.bundle.js' %}"></script>
 {% endblock content %}
