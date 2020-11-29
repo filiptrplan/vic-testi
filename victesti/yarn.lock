@@ -2973,6 +2973,11 @@ find-cache-dir@^3.3.1:
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
 
+find-object@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/find-object/-/find-object-1.2.0.tgz#23deda69b6fb252dabe11757b56ea90fd11515d6"
+  integrity sha512-8iKcD5fDoQqmj2I9elpVmxYSXVUm97Z500WQOxT9MbIY1afNbi7YK1IbEyCmdf+WsYnCkg9ZgycUQxAQ2uJM6Q==
+
 find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"

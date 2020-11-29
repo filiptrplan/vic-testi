@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.detail import DetailView
+from django.contrib.postgres.search import SearchVector, SearchQuery, TrigramSimilarity
+from django.db.models.functions import Greatest
 from tests.models import Professor, TestImage, Test, Subject
 import tests.upload
 
@@ -17,7 +19,50 @@ def search(request):
 
 
 def search_ajax(request):
-    return
+    query = request.GET.get('query')
+    if(request.method != "GET" or query is None):
+        return HttpResponseBadRequest()
+
+    # If the text query is empty just take all objects as the QuerySet
+    if query != '':
+        tests = Test.objects.annotate(
+            similarity=Greatest(
+                TrigramSimilarity('professor__first_name', query),
+                TrigramSimilarity('professor__last_name', query),
+                TrigramSimilarity('professor__subject__name', query),
+            )
+        ).filter(similarity__gt=0.3).order_by('-similarity')
+    else:
+        tests = Test.objects.all()
+
+    year_query = request.GET.get('year')
+    if year_query is not None:
+        tests = tests.filter(year=year_query)
+
+    professor_query = request.GET.get('professor')
+    if professor_query is not None:
+        tests = tests.filter(professor=professor_query)
+
+    subject_query = request.GET.get('subject')
+    if subject_query is not None:
+        tests = tests.filter(subject=subject_query)
+
+    professors = Professor.objects.annotate(
+        similarity=Greatest(
+            TrigramSimilarity('first_name', query),
+            TrigramSimilarity('last_name', query),
+        )
+    ).filter(similarity__gt=0.3).order_by('-similarity')
+
+    subjects = Subject.objects.annotate(
+        similarity=TrigramSimilarity('name', query),
+    ).filter(similarity__gt=0.3).order_by('-similarity')
+
+    return JsonResponse({
+        'tests': list(tests.values()),
+        'professors': list(professors.values()),
+        'subjects': list(subjects.values()),
+        })
 
 class TestDetailView(DetailView):
     model = Test

@@ -5,13 +5,13 @@
     <div class="mt-4 column is-8">
         <div class="field has-addons" id="searchBar">
             <p id="searchInputContainer" class="control is-expanded has-icons-left has-icons-right">
-                <input class="input" type="search" placeholder="Išči test, letnik, profesorja, predmet...">
+                <input id="searchInput" class="input" type="text" placeholder="Išči test, letnik, profesorja, predmet...">
                 <span class="icon is-small is-left">
                 <i class="fas fa-search"></i>
                 </span>
             </p>
             <div class="control">
-                <button class="button is-primary has-text-light has-text-weight-light">
+                <button id="searchButton" class="button is-primary has-text-light has-text-weight-light">
                     Išči
                 </button>
             </div>
@@ -30,52 +30,71 @@
                 <select name="subject" id="subjectInput"></select>
             </div>
         </div>
-        <div class="my-5">
-            <div class="search-result professor-result columns p-2">
-                <div class="column is-6 has-text-left">
-                    <h3 class="title">Alenka Mozer</h3>
-                    <p class="subtitle is-6 has-text-weight-light">Profesor</p>
-                </div>
-                <div class="column is-6 has-text-right">
-                    <p class="has-text-weight-light">Št. testov: 13</p>
-                </div>
+        <div id="resultsContainer">
+        
+        </div>
+
+    </div>
+</div>
+
+
+<template id="test-search-template">
+    <div class="my-5 search-result">
+        <div class="test-result columns p-2">
+            <div class="column is-6 has-text-left">
+                <h3 class="title test-title">Alenka Mozer - 3. letnik</h3>
+                <p class="subtitle is-6 has-text-weight-light">Test</p>
+            </div>
+            <div class="column is-6 has-text-right">
+                <span class="fas fa-chevron-down"></span>
             </div>
         </div>
-        <div class="my-5 search-result">
-            <div class="test-result columns p-2">
-                <div class="column is-6 has-text-left">
-                    <h3 class="title">Alenka Mozer - 3. letnik</h3>
-                    <p class="subtitle is-6 has-text-weight-light">Test</p>
-                </div>
-                <div class="column is-6 has-text-right">
-                    <span class="fas fa-chevron-down"></span>
-                </div>
-            </div>
-            <div class="test-dropdown columns">
+        <div class="test-dropdown">
+            <div class="columns">
                 <input type="hidden" name="testId" value="1">
                 <button class="openTestButton column button m-3 is-black has-text-centered has-text-weight-light is-medium">Odpri test</button>
                 <button class="downloadTestButton column button m-3 is-black has-text-weight-light is-medium">Prenesi test</button>
                 <button class="printTestButton column button m-3 is-black has-text-weight-light is-medium">Sprintaj test</button>
             </div>
         </div>
-        <div class="my-5">
-            <div class="search-result professor-result columns p-2">
-                <div class="column is-6 has-text-left">
-                    <h3 class="title">Alenka Mozer</h3>
-                    <p class="subtitle is-6 has-text-weight-light">Profesor</p>
-                </div>
-                <div class="column is-6 has-text-right">
-                    <p class="has-text-weight-light">Št. testov: 13</p>
-                </div>
+    </div>
+</template>
+
+
+<template id="profesor-search-template">
+<div class="my-5">
+        <div class="search-result professor-result columns p-2">
+            <div class="column is-6 has-text-left">
+                <h3 class="title">Alenka Mozer</h3>
+                <p class="subtitle is-6 has-text-weight-light">Profesor</p>
+            </div>
+            <div class="column is-6 has-text-right">
+                <p class="has-text-weight-light">Št. testov: 13</p>
             </div>
         </div>
     </div>
-</div>
+</template>
+
+<template id="subject-search-template">
+<div class="my-5">
+        <div class="search-result professor-result columns p-2">
+            <div class="column is-6 has-text-left">
+                <h3 class="title">Alenka Mozer</h3>
+                <p class="subtitle is-6 has-text-weight-light">Subject</p>
+            </div>
+            <div class="column is-6 has-text-right">
+                <p class="has-text-weight-light">Št. testov: 13</p>
+            </div>
+        </div>
+    </div>
+</template>
+
+
 
 <script>
     let professorList = []
     {% for professor in professors %}
-    professorList.push({id: {{professor.id}}, name: "{{professor}}"});
+    professorList.push({id: {{professor.id}}, name: "{{professor}}", subject_id: "{{professor.subject.id}}"});
     {% endfor %}
     let subjectList = []
     {% for subject in subjects %}

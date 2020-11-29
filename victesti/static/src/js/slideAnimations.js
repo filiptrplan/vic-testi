@@ -60,8 +60,8 @@ export const slideDown = (target, duration = 500) => {
 /* TOOGLE */
 export const slideToggle = (target, duration = 500) => {
     if (window.getComputedStyle(target).display === "none") {
-        return slideDown(target, duration);
+        slideDown(target, duration);
     } else {
-        return slideUp(target, duration);
+        slideUp(target, duration);
     }
 };
