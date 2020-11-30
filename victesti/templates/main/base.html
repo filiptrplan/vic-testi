@@ -12,37 +12,40 @@
 </head>
 <body>
     <div class="main-container">
-        <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
-            <div class="container is-widescreen">
-                <div class="navbar-brand mx-3 logo">
-                    <a class="navbar-item" href="{% url 'main.home' %}">
-                        <img src="{% static 'images/logo.png' %}" alt="GimVič Logo">
-                    </a>
-                    <a role="button" data-target="navMenu" class="navbar-burger" aria-label="menu" aria-expanded="false">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-                <div class="navbar-menu" id="navMenu">
-                    <div class="navbar-start is-size-6">
-                        {% with request.resolver_match.url_name as url_name %}
-                        <a href="{% url 'main.home' %}" class="navbar-item {% if url_name == 'main.home' %}is-active active disabled{% endif %}">DOMOV</a>
-                        <a href="{% url 'tests.search' %}" class="navbar-item {% if url_name == 'tests.search' %}active disabled{% endif %}">ISKANJE</a>
-                        <a href="{% url 'tests.upload' %}" class="navbar-item {% if url_name == 'tests.upload' %}active disabled{% endif %}">NALOŽI TEST</a>
-                        <a href="#" class="navbar-item">VIŠKI GIMNAZIJCI</a>
+        <div id="navContainer">
+            <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+                <div class="container is-widescreen">
+                    <div class="navbar-brand mx-3 logo">
+                        <a class="navbar-item" href="{% url 'main.home' %}">
+                            <img src="{% static 'images/logo.png' %}" alt="GimVič Logo">
+                        </a>
+                        <a role="button" data-target="navMenu" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
                     </div>
-                    <div class="navbar-end mr-3">
-                        <div class="navbar-item buttons">
-                            <a id="facebookLogin" class="button is-primary has-text-light has-text-weight-light">
-                                PRIJAVA S FACEBOOKOM
-                            </a>
+                    <div class="navbar-menu" id="navMenu">
+                        <div class="navbar-start is-size-6">
+                            {% with request.resolver_match.url_name as url_name %}
+                            <a href="{% url 'main.home' %}" class="navbar-item {% if url_name == 'main.home' %}is-active active disabled{% endif %}">DOMOV</a>
+                            <a href="{% url 'tests.search' %}" class="navbar-item {% if url_name == 'tests.search' %}active disabled{% endif %}">ISKANJE</a>
+                            <a href="{% url 'tests.upload' %}" class="navbar-item {% if url_name == 'tests.upload' %}active disabled{% endif %}">NALOŽI TEST</a>
+                            <a href="#" class="navbar-item">VIŠKI GIMNAZIJCI</a>
                         </div>
+                        <div class="navbar-end mr-3">
+                            <div class="navbar-item buttons">
+                                <p class="mr-3 has-text-weight-light" id="facebookName"></p>
+                                <a id="facebookLoginButton" class="button is-primary has-text-light has-text-weight-light">
+                                    PRIJAVA S FACEBOOKOM
+                                </a>
+                            </div>
+                        </div>
+                        {% endwith %}
                     </div>
-                    {% endwith %}
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
         <div class="content-container container is-widescreen">
             <div class="content p-3">
                 {% block content %}
@@ -52,5 +55,6 @@
     </div>
     <script src="{% static 'js/runtime.bundle.js' %}"></script>
     <script src="{% static 'js/base.bundle.js' %}"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 </body>
 </html>

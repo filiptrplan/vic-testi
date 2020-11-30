@@ -1,7 +1,7 @@
 import { sha256 } from "js-sha256";
 import "./ajax";
 import ajax from "./ajax";
-import getCookie from "./upload";
+import {getCookie} from "./cookies";
 
 const csrftoken = getCookie("csrftoken");
 

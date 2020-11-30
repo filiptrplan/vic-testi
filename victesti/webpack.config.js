@@ -79,6 +79,7 @@ module.exports = {
                 changeOrigin: true,
             },
         },
+        http2: true,
     },
     optimization: {
         runtimeChunk: "single",

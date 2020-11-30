@@ -16,6 +16,9 @@ html, body {
     background-color: $main-bg-color;
     #navContainer {
         flex: 0 0 auto;
+        #facebookName {
+            margin-bottom: 0.5rem;
+        }
     }
     .content-container {
         background-color: $content-color;

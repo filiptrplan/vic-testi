@@ -3,6 +3,8 @@ import Choices from "choices.js";
 import $ from "cash-dom";
 import uploadFile from "./s3upload";
 import ajax from "./ajax";
+import { getCookie } from "./cookies";
+
 // File input selectize
 const fileChoices = new Choices("#filesInput", {
     removeItems: true,
@@ -159,22 +161,3 @@ setInterval(() => {
         progressBar.attr("value", progressCurrent.toString());
     }
 }, 5);
-
-
-export default function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === name + "=") {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}

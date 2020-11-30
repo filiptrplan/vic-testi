@@ -4,6 +4,7 @@ import ajax from "./ajax.js";
 import downloadAndZip from "./downloadTest.js";
 import { slideToggle } from "./slideAnimations";
 import { findFirst } from "find-object";
+import { getCookie } from "./cookies";
 
 const pageStyle = `<style>@media print {  
   img {
@@ -56,28 +57,6 @@ yearChoices.setChoices([
     { value: 4, label: "4. letnik", selected: false },
 ]);
 
-
-
-
-
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === name + "=") {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
 let prevInputTime = 0;
 
