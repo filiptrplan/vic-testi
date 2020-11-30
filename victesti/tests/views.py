@@ -7,6 +7,7 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, TrigramSim
 from django.db.models.functions import Greatest
 from tests.models import Professor, TestImage, Test, Subject
 import tests.upload
+import requests;
 
 def search(request):
     """
@@ -100,22 +101,35 @@ def get_signature(request):
 def create_test(request):
     """Creates a test object from parameters
     """
-    if request.method == "POST":
-        if(request.POST['year'] == 'undefined' or request.POST['professorId'] == 'undefined' or \
-        len(request.POST.getlist('fileLocations')) == 0):
-            return HttpResponseBadRequest()
-        professor = Professor.objects.get(id=int(request.POST['professorId']))
-        year = int(request.POST['year'])
-
-        test = Test(year=year, professor=professor)
-        test.save()
-
-        file_locations = request.POST.getlist('fileLocations')
-        for location in file_locations:
-            test_image = TestImage(file=location)
-            test_image.test = test
-            test_image.save()
-        return HttpResponse()
-    else:
+    if request.method != "POST":
         return HttpResponseBadRequest()
+        
+    if(request.POST['year'] == 'undefined' or request.POST['professorId'] == 'undefined' or \
+    len(request.POST.getlist('fileLocations')) == 0):
+        return HttpResponseBadRequest()
+
+    # Check if user is member of the group
+    fbResponse = requests.get('https://graph.facebook.com/me/groups', params={
+        'access_token': request.POST['fb_token']
+    });
+    fbGroups = fbResponse.json()['data']
+    fbGroupID = settings.FB_GROUP_ID
+    # Finds the group with the ID or returns None
+    fbGroupAuth = next((x for x in fbGroups if x['id'] == fbGroupID), None)
+    if(fbGroupAuth is None):
+        return JsonResponse({'error': 'not_group_member'}, status=500)
+
+    professor = Professor.objects.get(id=int(request.POST['professorId']))
+    year = int(request.POST['year'])
+
+    test = Test(year=year, professor=professor)
+    test.save()
+
+    file_locations = request.POST.getlist('fileLocations')
+    for location in file_locations:
+        test_image = TestImage(file=location)
+        test_image.test = test
+        test_image.save()
+    return HttpResponse()
+        
     

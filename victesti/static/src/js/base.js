@@ -1,5 +1,5 @@
 import $ from "cash-dom";
-import { setCookie, getCookie } from "./cookies";
+import { setCookie, getCookie, eraseCookie } from "./cookies";
 
 let facebookConnected = false;
 
@@ -29,7 +29,7 @@ $(document).ready(function () {
         if(facebookConnected) {
             FB.logout(handleConnected); 
         } else {
-            FB.login(handleConnected)
+            FB.login(handleConnected, { scope: "groups_access_member_info" });
         }
     });
 });
@@ -51,12 +51,14 @@ function handleConnected(response){
         FB.api('/me', (response) => {
             $('#facebookName').html(`(${response.name})`);
             setCookie('FBName', response.name);
-        })
+        });
         setCookie('FBConnected', '1');
+        setCookie('FBAccessToken', response.authResponse.accessToken);
     } else {
         facebookConnected = false;
         $('#facebookLoginButton').html('PRIJAVA S FACEBOOKOM');
         $('#facebookName').html('');
         setCookie('FBConnected', '0');
+        eraseCookie('FBAccessToken');
     }
 }

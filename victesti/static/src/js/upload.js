@@ -82,6 +82,11 @@ yearChoices.setChoices([
 ]);
 
 $("#uploadButton").on("click", () => {
+    if(getCookie('FBConnected') == null || getCookie('FBConnected') == 0){
+        // Throw error that you must be logged in to upload
+        console.error('Not logged in!');
+        return;
+    }
     const files = fileChoices.getValue(true);
     if (files.length != 0) {
         uploadAllFiles(files, 0);
@@ -95,7 +100,8 @@ document.addEventListener("upload-finished", () => {
     let parameters = {
         professorId: profChoices.getValue(true),
         fileLocations: fileLocations,
-        year: yearChoices.getValue(true)
+        year: yearChoices.getValue(true),
+        fb_token: getCookie('FBAccessToken')
     };
     ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then((xhr) => {
         if(xhr.status == 200){
