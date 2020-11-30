@@ -1,17 +1,7 @@
-export default function ajax(method, url, parameters=[], csrftoken='', responseType='', progressCallback=()=>{}) {
+export function ajax(method, url, parameters=[], csrftoken='', responseType='', progressCallback=()=>{}) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        let paramString = "";
-        for (const param in parameters) {
-            if (Array.isArray(parameters[param])) {
-                parameters[param].forEach((value) => {
-                    paramString += `${param}=${value}&`;
-                });
-            } else {
-                paramString += `${param}=${parameters[param]}&`;
-            }
-        }
-        paramString = paramString.slice(0, -1);
+        let paramString = getParamString(parameters);
 
         if(method.toLowerCase() == "post") xhr.open("POST", url, true);
         else if (method.toLowerCase() == "get") xhr.open("GET", url + "?" + paramString, true);
@@ -32,4 +22,19 @@ export default function ajax(method, url, parameters=[], csrftoken='', responseT
             resolve(this);
         };
     });
+}
+
+export function getParamString(parameters) {
+    let paramString = ''
+    for (const param in parameters) {
+        if (Array.isArray(parameters[param])) {
+            parameters[param].forEach((value) => {
+                paramString += `${param}=${value}&`;
+            });
+        } else {
+            paramString += `${param}=${parameters[param]}&`;
+        }
+    }
+    paramString = paramString.slice(0, -1);
+    return paramString
 }

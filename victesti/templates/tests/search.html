@@ -16,26 +16,41 @@
                 </button>
             </div>
         </div>
-        <div class="mb-2">
-            <label for="sort">Razvrščanje: </label>
-            <select name="sort" id="sortInput">
-                <option value="default">Privzeto</option>
-                <option value="date_asc">Naraščajoče po datumu</option>
-                <option value="date_desc">Padajoče po datumu</option>
-            </select>
+        <div id="advancedSearchContainer">
+            <a id="advancedSearchButton">Napredno iskanje [+]</a>
         </div>
-        <div class="columns">
-            <div class="column is-4" id="professorSelect">     
-                <label for="professor">Profesor: </label>
-                <select name="professor" id="professorInput"></select>
+        <div id="advancedSearch">
+            <div class="mb-2 columns">
+                <div class="search-column column is-6">
+                    <label for="sort">Razvrščanje: </label>
+                    <select name="sort" id="sortInput">
+                        <option value="default">Privzeto</option>
+                        <option value="date_asc">Naraščajoče po datumu</option>
+                        <option value="date_desc">Padajoče po datumu</option>
+                    </select>
+                </div>
+                <div class="search-column column is-6">
+                    <label for="pagination">Rezultatov na stran: </label>
+                    <select name="pagination" id="paginationInput">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
             </div>
-            <div class="column is-4" id="yearSelect">     
-                <label for="year">Letnik: </label>
-                <select name="year" id="yearInput"></select>
-            </div>
-            <div class="column is-4" id="subjectSelect">     
-                <label for="subject">Predmet: </label>
-                <select name="subject" id="subjectInput"></select>
+            <div class="columns">
+                <div class="search-column column is-4" id="professorSelect">     
+                    <label for="professor">Profesor: </label>
+                    <select name="professor" id="professorInput"></select>
+                </div>
+                <div class="search-column column is-4" id="yearSelect">     
+                    <label for="year">Letnik: </label>
+                    <select name="year" id="yearInput"></select>
+                </div>
+                <div class="search-column column is-4" id="subjectSelect">     
+                    <label for="subject">Predmet: </label>
+                    <select name="subject" id="subjectInput"></select>
+                </div>
             </div>
         </div>
         <div id="resultsContainer">

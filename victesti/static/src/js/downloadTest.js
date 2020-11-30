@@ -1,6 +1,6 @@
 import JsZip from "jszip";
 import FileSaver from "file-saver";
-import ajax from "./ajax";
+import { ajax } from "./ajax";
 
 function download(url) {
     return ajax("GET", url, [], "", "blob").then(

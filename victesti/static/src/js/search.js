@@ -1,6 +1,6 @@
 import $ from "cash-dom";
 import Choices from "choices.js";
-import ajax from "./ajax.js";
+import { ajax, getParamString } from "./ajax.js";
 import downloadAndZip from "./downloadTest.js";
 import { slideToggle } from "./slideAnimations";
 import { findFirst } from "find-object";
@@ -15,13 +15,16 @@ const pageStyle = `<style>@media print {
 }</style>`;
 // Delay between input events before ajax query executes
 const searchDelay = 1000;
-const csrftoken = getCookie('csrftoken');
+const csrftoken = getCookie("csrftoken");
 const testTemplate = $("#test-search-template").contents();
 const resultsContainer = $("#resultsContainer");
-
-refreshHandlers();
+let currentPage = 1;
 
 const sortChoices = new Choices("#sortInput", {
+    searchEnabled: false,
+    shouldSort: false
+});
+const paginationChoices = new Choices("#paginationInput", {
     searchEnabled: false,
     shouldSort: false
 });
@@ -65,7 +68,7 @@ yearChoices.setChoices([
 
 let prevInputTime = 0;
 
-$('#searchInput').on('input', (e) => {
+$("#searchInput").on("input", (e) => {
     let d = new Date();
     prevInputTime = d.getTime();
     setTimeout(() => {
@@ -76,8 +79,8 @@ $('#searchInput').on('input', (e) => {
     }, searchDelay + 5)
 });
 
-$("#searchButton").on('click', () => {
-    search($('#searchInput').val());
+$("#searchButton").on("click", () => {
+    search($("#searchInput").val());
 })
 
 function search(query){
@@ -85,38 +88,48 @@ function search(query){
     const profParam = profChoices.getValue(true);
     const subjectParam = subjChoices.getValue(true);
 
-    let paramData = { query: query , sort: sortChoices.getValue(true) };
+    let paramData = { 
+        query: query,
+        sort: sortChoices.getValue(true),
+        pagination: paginationChoices.getValue(true),
+        page: currentPage
+    };
 
-    if(typeof(yearParam) != "undefined") paramData['year'] = yearParam;
-    if(typeof(profParam) != "undefined") paramData['prof'] = profParam;
-    if(typeof(subjectParam) != "undefined") paramData['subject'] = subjectParam;
+    if(typeof(yearParam) != "undefined") paramData["year"] = yearParam;
+    if(typeof(profParam) != "undefined") paramData["prof"] = profParam;
+    if(typeof(subjectParam) != "undefined") paramData["subject"] = subjectParam;
+
+    // Reflect the search in the history
+    let params = 'search?search&' + getParamString(paramData);
+    history.pushState({}, 'Iskanje', params);
     
-    ajax('GET', '/tests/search/ajax', paramData, csrftoken, 'json').then((xhr) => {
+    ajax("GET", "/tests/search/ajax", paramData, csrftoken, "json").then((xhr) => {
         let response = xhr.response;
-        resultsContainer.html('');
+        resultsContainer.html("");
 
         for(let testID in response.tests){
             let newResult = testTemplate.clone();
             let test = response.tests[testID];
             resultsContainer.append(newResult);
+
             // Necessary to make the dropdown buttons work
-            $(newResult).contents().find('input[name="testId"]').val(test.id);
+            $(newResult).contents().find("input[name='testId']").val(test.id);
 
             // Set the test link
-            $(newResult).contents().find('.test-link').attr('href', `/tests/${test.id}`)
+            $(newResult).contents().find(".test-link").attr("href", `/tests/${test.id}`)
 
             // Set the upload date
             let uploadDate = new Date(test.created_at);
-            let uploadDateString = new Intl.DateTimeFormat('sl-SI').format(uploadDate);
-            $(newResult).contents().find('.test-date').html(uploadDateString);
+            let uploadDateString = new Intl.DateTimeFormat("sl-SI").format(uploadDate);
+            $(newResult).contents().find(".test-date").html(uploadDateString);
             
             let professor = findFirst(professorList, {id: test.professor_id});
-            $(newResult).contents().find('.test-title').html(
+            $(newResult).contents().find(".test-title").html(
                 `${professor.name} - ${test.year}. letnik`
             );
 
             let subject = findFirst(subjectList, {id: professor.subject_id});
-            $(newResult).contents().find('.test-subtitle').html(
+            $(newResult).contents().find(".test-subtitle").html(
                 `Test - ${subject.name}`
             );
         }
@@ -124,9 +137,42 @@ function search(query){
     });
 }
 
+$("#advancedSearchButton").on("click", () => {
+    slideToggle($("#advancedSearch").get()[0]);
+})
+
+function getSearchFromParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has("page")) {
+        currentPage = parseInt(urlParams.get("page"));
+    }
+    if(urlParams.has("pagination")){
+        paginationChoices.setChoiceByValue(parseInt(urlParams.get("pagination")));
+    }
+    if(urlParams.has("sort")){
+        sortChoices.setChoiceByValue(urlParams.get("sort"));
+    }
+    if(urlParams.has("professor")){
+        profChoices.setChoiceByValue(parseInt(urlParams.get("professor")));
+    }
+    if(urlParams.has("subject")){
+        subjChoices.setChoiceByValue(parseInt(urlParams.get("subject")));
+    }
+    if(urlParams.has("year")){
+        console.log(urlParams.get("year"));
+        yearChoices.setChoiceByValue(parseInt(urlParams.get("year")));
+    }
+    if(urlParams.has("search")){
+        search("");
+    }
+    if (urlParams.has("advanced")) {
+        $("#advancedSearch").show();
+    }
+}
+
 function refreshHandlers() {
     $(".test-result").on("click", (e) => {
-        if($(e.target).hasClass('test-title')) return;
+        if($(e.target).hasClass("test-title")) return;
         let dropdown = $(e.target)
             .parents(".test-result")
             .siblings(".test-dropdown")
@@ -134,14 +180,14 @@ function refreshHandlers() {
         slideToggle(dropdown);
     });
     $(".downloadTestButton").on("click", (e) => {
-        let id = $(e.target).siblings('input[type="hidden"]').attr("value");
+        let id = $(e.target).siblings("input[type='hidden']").attr("value");
         ajax("GET", `/tests/${id}/links`, [], csrftoken, "json").then((xhr) => {
             downloadAndZip(xhr.response.links);
         });
     });
 
     $(".openTestButton").on("click", (e) => {
-        let id = $(e.target).siblings('input[type="hidden"]').attr("value");
+        let id = $(e.target).siblings("input[type='hidden']").attr("value");
         window.location.href = `/tests/${id}`;
     });
 
@@ -149,7 +195,7 @@ function refreshHandlers() {
         let docString = "";
         docString += pageStyle;
 
-        let id = $(e.target).siblings('input[type="hidden"]').attr("value");
+        let id = $(e.target).siblings("input[type='hidden']").attr("value");
         ajax("GET", `/tests/${id}/links`, [], csrftoken, "json").then((xhr) => {
             xhr.response.links.forEach((link) => {
                 docString += `<img src="${link}">`;
@@ -166,3 +212,8 @@ function refreshHandlers() {
         });
     });
 }
+
+$(window).on("load", () => {
+    refreshHandlers();
+    getSearchFromParams();
+})

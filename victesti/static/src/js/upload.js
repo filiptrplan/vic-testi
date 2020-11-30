@@ -2,7 +2,7 @@
 import Choices from "choices.js";
 import $ from "cash-dom";
 import uploadFile from "./s3upload";
-import ajax from "./ajax";
+import { ajax } from "./ajax";
 import { getCookie } from "./cookies";
 
 // File input selectize
