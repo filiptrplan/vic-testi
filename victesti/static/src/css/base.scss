@@ -1,19 +1,26 @@
 $main-bg-color: $grey-lightest;
 $content-color: $white-bis;
 
-html {
+html, body {
     margin: 0;
     padding: 0;
     background-color: $main-bg-color;
+    height: 100%;
 }
 
 .main-container {
-    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
     width: 100vw;
     background-color: $main-bg-color;
+    #navContainer {
+        flex: 0 0 auto;
+    }
     .content-container {
         background-color: $content-color;
-        height: 100%;
+        flex: 1 1 auto;
+        width: 100%;
     }
 }
 

@@ -117,6 +117,12 @@ function search(query){
             resultsContainer.append(newResult);
             // Necessary to make the dropdown buttons work
             $(newResult).contents().find('input[name="testId"]').val(test.id);
+
+            // Set the test link
+            $(newResult).contents().find('.test-link').attr('href', `/tests/${test.id}`)
+            
+            // Set the ID number 
+            $(newResult).contents().find('.test-id').html(`ID: ${test.id}`);
             
             let professor = findFirst(professorList, {id: test.professor_id});
             $(newResult).contents().find('.test-title').html(
@@ -129,6 +135,7 @@ function search(query){
 
 function refreshHandlers() {
     $(".test-result").on("click", (e) => {
+        if($(e.target).hasClass('test-title')) return;
         let dropdown = $(e.target)
             .parents(".test-result")
             .siblings(".test-dropdown")
