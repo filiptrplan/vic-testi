@@ -51,10 +51,10 @@
         <div class="test-result columns p-2">
             <div class="column is-6 has-text-left">
                 <a class="test-link" href="#"><h3 class="title test-title">Alenka Mozer - 3. letnik</h3></a>
-                <p class="subtitle is-6 has-text-weight-light">Test</p>
+                <p class="test-subtitle subtitle is-6 has-text-weight-light">Test</p>
             </div>
             <div class="column is-6 has-text-right">
-                <p class="test-id has-text-weight-light">ID: </p>
+                <p class="test-date has-text-weight-light"></p>
                 <span class="fas fa-chevron-down"></span>
             </div>
         </div>
@@ -103,7 +103,7 @@
 <script>
     let professorList = []
     {% for professor in professors %}
-    professorList.push({id: {{professor.id}}, name: "{{professor}}", subject_id: "{{professor.subject.id}}"});
+    professorList.push({id: {{professor.id}}, name: "{{professor}}", subject_id: {{professor.subject.id}}});
     {% endfor %}
     let subjectList = []
     {% for subject in subjects %}

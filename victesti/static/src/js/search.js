@@ -104,13 +104,20 @@ function search(query){
 
             // Set the test link
             $(newResult).contents().find('.test-link').attr('href', `/tests/${test.id}`)
-            
-            // Set the ID number 
-            $(newResult).contents().find('.test-id').html(`ID: ${test.id}`);
+
+            // Set the upload date
+            let uploadDate = new Date(test.created_at);
+            let uploadDateString = new Intl.DateTimeFormat('sl-SI').format(uploadDate);
+            $(newResult).contents().find('.test-date').html(uploadDateString);
             
             let professor = findFirst(professorList, {id: test.professor_id});
             $(newResult).contents().find('.test-title').html(
                 `${professor.name} - ${test.year}. letnik`
+            );
+
+            let subject = findFirst(subjectList, {id: professor.subject_id});
+            $(newResult).contents().find('.test-subtitle').html(
+                `Test - ${subject.name}`
             );
         }
         refreshHandlers();

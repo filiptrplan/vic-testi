@@ -7,6 +7,10 @@ $search-result-bg: $white-ter;
         background-color: $search-result-bg;
         margin-bottom: 0;
     }
+    .test-id, .test-date{
+        display: inline;
+        margin-right: 0.25rem;
+    }
     .test-dropdown {
         background-color: $main-bg-color;
         padding: 0.75em;
