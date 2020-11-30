@@ -21,7 +21,8 @@ def search(request):
 
 def search_ajax(request):
     query = request.GET.get('query')
-    if(request.method != "GET" or query is None):
+    sort = request.GET.get('sort')
+    if(request.method != "GET" or query is None or sort is None):
         return HttpResponseBadRequest()
 
     # If the text query is empty just take all objects as the QuerySet
@@ -32,9 +33,18 @@ def search_ajax(request):
                 TrigramSimilarity('professor__last_name', query),
                 TrigramSimilarity('professor__subject__name', query),
             )
-        ).filter(similarity__gt=0.3).order_by('-similarity')
+        ).filter(similarity__gt=0.3)
+        if(sort == 'default'):
+            tests = tests.order_by('-similarity')
     else:
         tests = Test.objects.all()
+
+    print(sort)
+
+    if sort == 'date_asc':
+        tests = tests.order_by('created_at')
+    if sort == 'date_desc':
+        tests = tests.order_by('-created_at')
 
     year_query = request.GET.get('year')
     if year_query is not None:
@@ -119,10 +129,16 @@ def create_test(request):
     if(fbGroupAuth is None):
         return JsonResponse({'error': 'not_group_member'}, status=500)
 
+    fbResponse = requests.get('https://graph.facebook.com/me', params={
+        'access_token': request.POST['fb_token'],
+        'fields': 'id'
+    });
+    fbUserID = fbResponse.json()['id']
+
     professor = Professor.objects.get(id=int(request.POST['professorId']))
     year = int(request.POST['year'])
 
-    test = Test(year=year, professor=professor)
+    test = Test(year=year, professor=professor, fb_user_id=fbUserID)
     test.save()
 
     file_locations = request.POST.getlist('fileLocations')

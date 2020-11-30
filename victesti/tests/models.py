@@ -25,6 +25,8 @@ class Test(models.Model):
         YEAR4 = 4
     year = models.IntegerField(choices=Year.choices)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
+    fb_user_id = models.CharField(max_length=128)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class TestImage(models.Model):

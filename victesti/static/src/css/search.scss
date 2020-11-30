@@ -21,3 +21,10 @@ $search-result-bg: $white-ter;
         }
     }
 }
+
+#searchBar {
+    margin-bottom: 0;
+    #searchInputContainer {
+        margin-bottom: 0.5rem;
+    }
+}

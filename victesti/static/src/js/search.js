@@ -21,6 +21,11 @@ const resultsContainer = $("#resultsContainer");
 
 refreshHandlers();
 
+const sortChoices = new Choices("#sortInput", {
+    searchEnabled: false,
+    shouldSort: false
+});
+
 // Load the choices for the professor select
 const profChoices = new Choices("#professorInput", {
     removeItemButton: true,
@@ -80,7 +85,7 @@ function search(query){
     const profParam = profChoices.getValue(true);
     const subjectParam = subjChoices.getValue(true);
 
-    let paramData = { query: query };
+    let paramData = { query: query , sort: sortChoices.getValue(true) };
 
     if(typeof(yearParam) != "undefined") paramData['year'] = yearParam;
     if(typeof(profParam) != "undefined") paramData['prof'] = profParam;
