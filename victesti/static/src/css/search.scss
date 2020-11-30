@@ -14,6 +14,18 @@ $search-result-bg: $white-ter;
     display: none;
 }
 
+#searchPagination {
+    display: none;
+    margin-top: 0.5rem;
+    .pagination-list {
+        margin-top: 0;
+        margin-left: 0;
+        li {
+            list-style-type: none;
+        }
+    }
+}
+
 .search-result {
     background-color: $search-result-bg;
     color: #4a4a4a;

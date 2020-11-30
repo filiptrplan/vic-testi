@@ -16,7 +16,7 @@ const pageStyle = `<style>@media print {
 // Delay between input events before ajax query executes
 const searchDelay = 1000;
 const csrftoken = getCookie("csrftoken");
-const testTemplate = $("#test-search-template").contents();
+const testTemplate = $("#testSearchTemplate").contents();
 const resultsContainer = $("#resultsContainer");
 let currentPage = 1;
 
@@ -88,6 +88,11 @@ function search(query){
     const profParam = profChoices.getValue(true);
     const subjectParam = subjChoices.getValue(true);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("page")) {
+        currentPage = parseInt(urlParams.get("page"));
+    }
+
     let paramData = { 
         query: query,
         sort: sortChoices.getValue(true),
@@ -134,6 +139,7 @@ function search(query){
             );
         }
         refreshHandlers();
+        generatePagination(currentPage, response.page_count);
     });
 }
 
@@ -213,7 +219,27 @@ function refreshHandlers() {
     });
 }
 
+const paginationLink = $('#paginationLinkTemplate').contents();
+const paginationEllipsis = $('#paginationEllipsisTemplate').contents();
+
+function generatePagination(currPage, totalPages) {
+    const searchPagination = $('#searchPagination');
+    const paginationList = $('#searchPagination ul');
+    searchPagination.css('display', 'flex');
+
+    // Case that has the ... on both sides
+    if(currPage > 3 || totalPages - currPage < totalPages - 2) {
+        addPaginationLink(paginationList, 1);
+    }
+}
+
+function addPaginationLink(paginationList, linkNumber, isCurrent=false) {
+    let link = paginationLink.clone();
+    console.log(link.contents());
+}
+
 $(window).on("load", () => {
     refreshHandlers();
     getSearchFromParams();
+    generatePagination(5, 15);
 })

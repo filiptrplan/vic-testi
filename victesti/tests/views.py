@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.postgres.search import SearchVector, SearchQuery, TrigramSimilarity
 from django.db.models.functions import Greatest
 from tests.models import Professor, TestImage, Test, Subject
+from django.core.paginator import Paginator, Page
 import tests.upload
 import requests;
 
@@ -22,6 +23,9 @@ def search(request):
 def search_ajax(request):
     query = request.GET.get('query')
     sort = request.GET.get('sort')
+    is_paginated = False
+    page_exceeded = False
+
     if(request.method != "GET" or query is None or sort is None):
         return HttpResponseBadRequest()
 
@@ -38,8 +42,6 @@ def search_ajax(request):
             tests = tests.order_by('-similarity')
     else:
         tests = Test.objects.all()
-
-    print(sort)
 
     if sort == 'date_asc':
         tests = tests.order_by('created_at')
@@ -58,6 +60,21 @@ def search_ajax(request):
     if subject_query is not None:
         tests = tests.filter(professor__subject=subject_query)
 
+    page_query = request.GET.get('page')
+    if page_query is not None:
+        is_paginated = True
+        pagination_query = request.GET.get('pagination')
+        if pagination_query is not None:
+            pagination = pagination_query
+        else:
+            pagination = 10
+        
+        tests_pagination = Paginator(tests, pagination)
+        if(int(page_query) <= tests_pagination.num_pages):
+            current_page = tests_pagination.page(page_query)
+        else:
+            current_page = tests_pagination.page(tests_pagination.num_pages)
+
     professors = Professor.objects.annotate(
         similarity=Greatest(
             TrigramSimilarity('first_name', query),
@@ -69,11 +86,17 @@ def search_ajax(request):
         similarity=TrigramSimilarity('name', query),
     ).filter(similarity__gt=0.3).order_by('-similarity')
 
-    return JsonResponse({
+    response_data = {
         'tests': list(tests.values()),
         'professors': list(professors.values()),
         'subjects': list(subjects.values()),
-        })
+        }
+    
+    if is_paginated == True:
+        response_data['tests'] = list(current_page.object_list.values())
+        response_data['page_count'] = tests_pagination.num_pages
+
+    return JsonResponse(response_data)
 
 class TestDetailView(DetailView):
     model = Test
