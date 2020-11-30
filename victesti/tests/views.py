@@ -45,7 +45,7 @@ def search_ajax(request):
 
     subject_query = request.GET.get('subject')
     if subject_query is not None:
-        tests = tests.filter(subject=subject_query)
+        tests = tests.filter(professor__subject=subject_query)
 
     professors = Professor.objects.annotate(
         similarity=Greatest(

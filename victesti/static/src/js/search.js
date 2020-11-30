@@ -97,7 +97,17 @@ $("#searchButton").on('click', () => {
 })
 
 function search(query){
-    ajax('GET', '/tests/search/ajax', {query: query}, csrftoken, 'json').then((xhr) => {
+    const yearParam = yearChoices.getValue(true);
+    const profParam = profChoices.getValue(true);
+    const subjectParam = subjChoices.getValue(true);
+
+    let paramData = { query: query };
+
+    if(typeof(yearParam) != "undefined") paramData['year'] = yearParam;
+    if(typeof(profParam) != "undefined") paramData['prof'] = profParam;
+    if(typeof(subjectParam) != "undefined") paramData['subject'] = subjectParam;
+    
+    ajax('GET', '/tests/search/ajax', paramData, csrftoken, 'json').then((xhr) => {
         let response = xhr.response;
         resultsContainer.html('');
 
