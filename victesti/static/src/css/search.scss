@@ -58,3 +58,29 @@ $search-result-bg: $white-ter;
         margin-bottom: 0.5rem;
     }
 }
+
+// https://cssninja.io/blog/post/simple-loader-bulma
+.loader-wrapper {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: 4rem 0;
+    opacity: 0;
+    z-index: 1;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+
+    .loader {
+        height: 80px;
+        width: 80px;
+    }
+
+    &.is-active {
+        opacity: 1;
+        display: flex;
+    }
+}

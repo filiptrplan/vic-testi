@@ -84,6 +84,9 @@ $("#searchButton").on("click", () => {
 })
 
 function search(query){
+    resultsContainer.html("");
+    $(".loader-wrapper").addClass("is-active");
+    
     const yearParam = yearChoices.getValue(true);
     const profParam = profChoices.getValue(true);
     const subjectParam = subjChoices.getValue(true);
@@ -107,10 +110,13 @@ function search(query){
     // Reflect the search in the history
     let params = 'search?search&' + getParamString(paramData);
     history.pushState({}, 'Iskanje', params);
+
+    setTimeout(() => {
+
+    }, 3000);
     
     ajax("GET", "/tests/search/ajax", paramData, csrftoken, "json").then((xhr) => {
         let response = xhr.response;
-        resultsContainer.html("");
 
         for(let testID in response.tests){
             let newResult = testTemplate.clone();
@@ -140,6 +146,7 @@ function search(query){
         }
         refreshHandlers();
         generatePagination(currentPage, response.page_count);
+        $(".loader-wrapper").removeClass("is-active");
     });
 }
 
