@@ -92,6 +92,8 @@ $("#searchButton").on("click", () => {
 function search(query){
     resultsContainer.html("");
     $(".loader-wrapper").addClass("is-active");
+    $("#noResultsContainer").hide();
+    $("#searchPagination").hide();
 
     const yearParam = yearChoices.getValue(true);
     const profParam = profChoices.getValue(true);
@@ -119,35 +121,38 @@ function search(query){
     
     ajax("GET", "/tests/search/ajax", paramData, csrftoken, "json").then((xhr) => {
         let response = xhr.response;
+        if(response.tests.length != 0) {
+            for(let testID in response.tests){
+                let newResult = testTemplate.clone();
+                let test = response.tests[testID];
+                resultsContainer.append(newResult);
 
-        for(let testID in response.tests){
-            let newResult = testTemplate.clone();
-            let test = response.tests[testID];
-            resultsContainer.append(newResult);
+                // Necessary to make the dropdown buttons work
+                $(newResult).contents().find("input[name='testId']").val(test.id);
 
-            // Necessary to make the dropdown buttons work
-            $(newResult).contents().find("input[name='testId']").val(test.id);
+                // Set the test link
+                $(newResult).contents().find(".test-link").attr("href", `/tests/${test.id}`)
 
-            // Set the test link
-            $(newResult).contents().find(".test-link").attr("href", `/tests/${test.id}`)
+                // Set the upload date
+                let uploadDate = new Date(test.created_at);
+                let uploadDateString = new Intl.DateTimeFormat("sl-SI").format(uploadDate);
+                $(newResult).contents().find(".test-date").html(uploadDateString);
+                
+                let professor = findFirst(professorList, {id: test.professor_id});
+                $(newResult).contents().find(".test-title").html(
+                    `${professor.name} - ${test.year}. letnik`
+                );
 
-            // Set the upload date
-            let uploadDate = new Date(test.created_at);
-            let uploadDateString = new Intl.DateTimeFormat("sl-SI").format(uploadDate);
-            $(newResult).contents().find(".test-date").html(uploadDateString);
-            
-            let professor = findFirst(professorList, {id: test.professor_id});
-            $(newResult).contents().find(".test-title").html(
-                `${professor.name} - ${test.year}. letnik`
-            );
-
-            let subject = findFirst(subjectList, {id: professor.subject_id});
-            $(newResult).contents().find(".test-subtitle").html(
-                `Test - ${subject.name}`
-            );
+                let subject = findFirst(subjectList, {id: professor.subject_id});
+                $(newResult).contents().find(".test-subtitle").html(
+                    `Test - ${subject.name}`
+                );
+            }
+            refreshHandlers();
+            generatePagination(currentPage, response.page_count);
+        } else {
+            $("#noResultsContainer").show();
         }
-        refreshHandlers();
-        generatePagination(currentPage, response.page_count);
         $(".loader-wrapper").removeClass("is-active");
     });
 }

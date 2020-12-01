@@ -59,6 +59,13 @@ $search-result-bg: $white-ter;
     }
 }
 
+#noResultsContainer {
+    display: none;
+    padding: 4rem 0;
+    text-align: center;
+    justify-content: center;
+}
+
 // https://cssninja.io/blog/post/simple-loader-bulma
 .loader-wrapper {
     position: relative;
