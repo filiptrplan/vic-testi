@@ -15,10 +15,12 @@ const pageStyle = `<style>@media print {
 }</style>`;
 // Delay between input events before ajax query executes
 const searchDelay = 1000;
+const searchEnterDelay = 1000;
 const csrftoken = getCookie("csrftoken");
 const testTemplate = $("#testSearchTemplate").contents();
 const resultsContainer = $("#resultsContainer");
 let currentPage = 1;
+let searchFromEnterTimestamp = 0;
 
 const sortChoices = new Choices("#sortInput", {
     searchEnabled: false,
@@ -73,6 +75,10 @@ $("#searchInput").on("input", (e) => {
     prevInputTime = d.getTime();
     setTimeout(() => {
         let dn = new Date();
+        // If they hit enter after a query, don't search twice
+        if(dn.getTime() - searchFromEnterTimestamp < searchDelay + searchEnterDelay){
+            return;
+        }
         if (dn.getTime() - prevInputTime > searchDelay) {
             search(e.target.value);
         }
@@ -86,7 +92,7 @@ $("#searchButton").on("click", () => {
 function search(query){
     resultsContainer.html("");
     $(".loader-wrapper").addClass("is-active");
-    
+
     const yearParam = yearChoices.getValue(true);
     const profParam = profChoices.getValue(true);
     const subjectParam = subjChoices.getValue(true);
@@ -110,10 +116,6 @@ function search(query){
     // Reflect the search in the history
     let params = 'search?search&' + getParamString(paramData);
     history.pushState({}, 'Iskanje', params);
-
-    setTimeout(() => {
-
-    }, 3000);
     
     ajax("GET", "/tests/search/ajax", paramData, csrftoken, "json").then((xhr) => {
         let response = xhr.response;
@@ -324,3 +326,14 @@ $(window).on("load", () => {
     refreshHandlers();
     getSearchFromParams();
 })
+
+$(document).on('keydown', (e) => {
+    // 13 is Enter key
+    if(e.keyCode == 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        searchFromEnterTimestamp = new Date().getTime();
+        console.log(searchFromEnterTimestamp);
+        search($("#searchInput").val());
+    }
+});

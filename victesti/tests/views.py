@@ -37,9 +37,15 @@ def search_ajax(request):
                 TrigramSimilarity('professor__last_name', query),
                 TrigramSimilarity('professor__subject__name', query),
             )
-        ).filter(similarity__gt=0.3)
-        if(sort == 'default'):
-            tests = tests.order_by('-similarity')
+        ).filter(similarity__gt=0.3).order_by('-similarity')
+        
+        # If the trigram similarity fails try the search vectors
+        # Already tried combining results but it seems more trouble than it's worth
+        if tests.count() == 0:
+            tests = Test.objects.annotate(
+                search=SearchVector('professor__first_name', 'professor__last_name', 'professor__subject__name', 'year')
+            ).filter(search=SearchQuery(query)).order_by('-professor__first_name')
+
     else:
         tests = Test.objects.all()
 
