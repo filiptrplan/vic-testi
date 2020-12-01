@@ -150,7 +150,7 @@ def create_test(request):
     # Check if user is member of the group
     fbResponse = requests.get('https://graph.facebook.com/me/groups', params={
         'access_token': request.POST['fb_token']
-    });
+    })
     fbGroups = fbResponse.json()['data']
     fbGroupID = settings.FB_GROUP_ID
     # Finds the group with the ID or returns None
@@ -161,13 +161,17 @@ def create_test(request):
     fbResponse = requests.get('https://graph.facebook.com/me', params={
         'access_token': request.POST['fb_token'],
         'fields': 'id'
-    });
+    })
     fbUserID = fbResponse.json()['id']
 
     professor = Professor.objects.get(id=int(request.POST['professorId']))
     year = int(request.POST['year'])
 
     test = Test(year=year, professor=professor, fb_user_id=fbUserID)
+
+    if(request.POST.get('note') is not None):
+        test.additional_note = request.POST.get('note')
+
     test.save()
 
     file_locations = request.POST.getlist('fileLocations')

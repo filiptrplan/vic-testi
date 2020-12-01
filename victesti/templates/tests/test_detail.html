@@ -4,6 +4,9 @@
 <div class="test-info">
     <div class="has-text-left">
         <p><strong>Profesor: </strong> {{ test.professor}} ({{test.professor.subject}}) </p>
+        {% if test.additional_note %}
+        <p><strong>Pripomba: </strong>{{test.additional_note}}</p>
+        {% endif %}
     </div>
     <br class="line-break">
     <div class="has-text-right">

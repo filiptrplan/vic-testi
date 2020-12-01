@@ -144,9 +144,11 @@ function search(query){
                 );
 
                 let subject = findFirst(subjectList, {id: professor.subject_id});
-                $(newResult).contents().find(".test-subtitle").html(
-                    `Test - ${subject.name}`
-                );
+                let subtitleText = `Test - ${subject.name}`;
+                if(test.additional_note) {
+                    subtitleText += ` (${test.additional_note})`;
+                }
+                $(newResult).contents().find(".test-subtitle").html(subtitleText);
             }
             refreshHandlers();
             generatePagination(currentPage, response.page_count);

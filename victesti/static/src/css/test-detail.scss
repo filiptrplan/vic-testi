@@ -38,6 +38,9 @@ $glide-height: 600px;
 .test-info {
     width: 100%;
     display: inline-block;
+    p {
+        margin-bottom: 0 !important;
+    }
     @include until($tablet) {
         .has-text-left {
             display: block;

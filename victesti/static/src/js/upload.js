@@ -103,13 +103,18 @@ document.addEventListener("upload-finished", () => {
         year: yearChoices.getValue(true),
         fb_token: getCookie('FBAccessToken')
     };
-    ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then((xhr) => {
-        if(xhr.status == 200){
-            // Success
-        } else {
-            // Failed
+    if ($("#noteCheckbox").get()[0].checked && $("#noteInput").val() != ''){
+        parameters.note = $("#noteInput").val();
+    }
+    ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then(
+        (xhr) => {
+            if (xhr.status == 200) {
+                // Success
+            } else {
+                // Failed
+            }
         }
-    });
+    );
 });
 
 function uploadAllFiles(files, i) {
@@ -167,3 +172,11 @@ setInterval(() => {
         progressBar.attr("value", progressCurrent.toString());
     }
 }, 5);
+
+$('#noteCheckbox').on('click', (e) => {
+    if(e.target.checked) {
+        $('#noteInput').show();
+    } else {
+        $('#noteInput').hide();
+    }
+});
