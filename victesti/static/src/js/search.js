@@ -226,20 +226,94 @@ function generatePagination(currPage, totalPages) {
     const searchPagination = $('#searchPagination');
     const paginationList = $('#searchPagination ul');
     searchPagination.css('display', 'flex');
+    paginationList.html('');
+    
+    if(currPage != 1){
+        searchPagination.children('.pagination-previous').attr('href', makePageLink(currPage-1));
+    }
+    if(currPage != totalPages){
+        searchPagination.children('.pagination-next').attr('href', makePageLink(currPage+1));
+    }
 
-    // Case that has the ... on both sides
-    if(currPage > 3 || totalPages - currPage < totalPages - 2) {
-        addPaginationLink(paginationList, 1);
+    if(totalPages > 3) {
+        if(currPage >= 3 && totalPages - currPage > 1) {
+            addPaginationLink(paginationList, 1);
+            addPaginationLink(paginationList, 0, false, true);
+            
+            addPaginationLink(paginationList, currPage-1);
+            addPaginationLink(paginationList, currPage, true);
+            addPaginationLink(paginationList, currPage+1);
+
+            addPaginationLink(paginationList, 0, false, true);
+            addPaginationLink(paginationList, totalPages);
+        } else if (currPage == 2) {
+            addPaginationLink(paginationList, currPage - 1);
+            addPaginationLink(paginationList, currPage, true);
+            addPaginationLink(paginationList, currPage + 1);
+
+            addPaginationLink(paginationList, 0, false, true);
+            addPaginationLink(paginationList, totalPages);
+        } else if (totalPages - currPage == 1) {
+            addPaginationLink(paginationList, 1);
+            addPaginationLink(paginationList, 0, false, true);
+            
+            addPaginationLink(paginationList, currPage - 1);
+            addPaginationLink(paginationList, currPage, true);
+            addPaginationLink(paginationList, currPage + 1);
+        } else if (currPage == 1){
+            addPaginationLink(paginationList, currPage, true);
+            addPaginationLink(paginationList, currPage + 1);
+            addPaginationLink(paginationList, currPage + 2);
+
+            addPaginationLink(paginationList, 0, false, true);
+            addPaginationLink(paginationList, totalPages);
+        } else if (currPage == totalPages) {
+            addPaginationLink(paginationList, 1);
+            addPaginationLink(paginationList, 0, false, true);
+
+            addPaginationLink(paginationList, currPage - 2);
+            addPaginationLink(paginationList, currPage - 1);
+            addPaginationLink(paginationList, currPage, true);
+        }
+    } else {
+        for(let i = 1; i <= totalPages; i++){
+            if(i == currPage) {
+                addPaginationLink(paginationList, i, true);
+            } else {
+                addPaginationLink(paginationList, i);
+            }
+        }
     }
 }
 
-function addPaginationLink(paginationList, linkNumber, isCurrent=false) {
-    let link = paginationLink.clone();
-    console.log(link.contents());
+function addPaginationLink(paginationList, linkNumber, isCurrent=false, isEllipsis=false) {
+    if(!isEllipsis){
+        let link = paginationLink.clone();
+        paginationList.append(link);
+
+        let linkA = link.contents();
+        linkA.html(linkNumber);
+
+        if(isCurrent) {
+            linkA.addClass('is-current');
+            linkA.attr('href', '#');
+        } else {
+
+            linkA.attr('href', makePageLink(linkNumber));
+        }
+    } else {
+        let link = paginationEllipsis.clone();
+        paginationList.append(link)
+    }
+}
+
+function makePageLink(pageNumber) {
+    let urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("page", pageNumber);
+    return window.location.origin + window.location.pathname + '?' + urlParams.toString()
 }
 
 $(window).on("load", () => {
     refreshHandlers();
     getSearchFromParams();
-    generatePagination(5, 15);
 })
