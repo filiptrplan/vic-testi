@@ -5,10 +5,11 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic.detail import DetailView
 from django.contrib.postgres.search import SearchVector, SearchQuery, TrigramSimilarity
 from django.db.models.functions import Greatest
+from django.core.paginator import Paginator
+from django.urls import reverse
 from tests.models import Professor, TestImage, Test, Subject
-from django.core.paginator import Paginator, Page
+import requests
 import tests.upload
-import requests;
 
 def search(request):
     """
@@ -148,26 +149,26 @@ def create_test(request):
         return HttpResponseBadRequest()
 
     # Check if user is member of the group
-    fbResponse = requests.get('https://graph.facebook.com/me/groups', params={
+    fb_response = requests.get('https://graph.facebook.com/me/groups', params={
         'access_token': request.POST['fb_token']
     })
-    fbGroups = fbResponse.json()['data']
-    fbGroupID = settings.FB_GROUP_ID
+    fb_groups = fb_response.json()['data']
+    fb_group_id = settings.FB_GROUP_ID
     # Finds the group with the ID or returns None
-    fbGroupAuth = next((x for x in fbGroups if x['id'] == fbGroupID), None)
+    fbGroupAuth = next((x for x in fb_groups if x['id'] == fb_group_id), None)
     if(fbGroupAuth is None):
         return JsonResponse({'error': 'not_group_member'}, status=500)
 
-    fbResponse = requests.get('https://graph.facebook.com/me', params={
+    fb_response = requests.get('https://graph.facebook.com/me', params={
         'access_token': request.POST['fb_token'],
         'fields': 'id'
     })
-    fbUserID = fbResponse.json()['id']
+    fb_user_id = fb_response.json()['id']
 
     professor = Professor.objects.get(id=int(request.POST['professorId']))
     year = int(request.POST['year'])
 
-    test = Test(year=year, professor=professor, fb_user_id=fbUserID)
+    test = Test(year=year, professor=professor, fb_user_id=fb_user_id)
 
     if(request.POST.get('note') is not None):
         test.additional_note = request.POST.get('note')
@@ -176,9 +177,11 @@ def create_test(request):
 
     file_locations = request.POST.getlist('fileLocations')
     for location in file_locations:
-        test_image = TestImage(file=location)
         test_image.test = test
         test_image.save()
-    return HttpResponse()
-        
+
+    redirect_url = reverse('tests.detail', kwargs={'pk': test.id})
+
+    return JsonResponse({'redirect': redirect_url})
+       
     

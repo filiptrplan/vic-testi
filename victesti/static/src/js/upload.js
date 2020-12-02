@@ -106,10 +106,10 @@ document.addEventListener("upload-finished", () => {
     if ($("#noteCheckbox").get()[0].checked && $("#noteInput").val() != ''){
         parameters.note = $("#noteInput").val();
     }
-    ajax("POST", createTestURL, parameters, getCookie("csrftoken")).then(
+    ajax("POST", createTestURL, parameters, getCookie("csrftoken"), 'json').then(
         (xhr) => {
             if (xhr.status == 200) {
-                // Success
+                window.location.pathname = xhr.response.redirect;
             } else {
                 // Failed
             }
@@ -180,3 +180,5 @@ $('#noteCheckbox').on('click', (e) => {
         $('#noteInput').hide();
     }
 });
+
+$('.choices').addClass('is-danger');

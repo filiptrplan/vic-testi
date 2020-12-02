@@ -28,11 +28,12 @@
         <div class="column is-6" id="yearSelect">     
             <label for="year">Letnik: </label>
             <select name="year" id="yearInput"></select>
+            <p class="help is-danger">This email is invalid</p>
         </div>
         <div class="column is-6" id="noteContainer">     
             <label for="note">Dodatna opomba: </label>
             <input type="checkbox" name="hasNote" id="noteCheckbox">
-            <input type="text" class="input" name="note" id="noteInput">
+            <input type="text" class="input is-danger" name="note" id="noteInput">
         </div>
         <div class="column is-6 mt-3">
             <button id="uploadButton" class="button is-rounded is-primary has-text-light has-text-weight-light is-medium is-fullwidth">Naloži test</button>
