@@ -9,7 +9,29 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from tests.models import Professor, TestImage, Test, Subject
 import requests
-import tests.upload
+from tests.s3 import s3_generate_post_signature, s3_delete_object
+
+def test_is_owner(request, pk):
+    if test_is_owner_helper(pk, request.POST.get('fb_token')):
+        return JsonResponse({'owner': True})
+    else:
+        return JsonResponse({'owner': False})
+
+def test_is_owner_helper(pk, access_token):
+    fb_user_id = Test.objects.filter(id=pk)[0].fb_user_id
+    fb_response = requests.get('https://graph.facebook.com/me', params={
+        'access_token': access_token,
+        'fields': 'id'
+    })
+    if 'error' in fb_response.json():
+        return False
+    
+    fb_id = fb_response.json()['id']
+    if fb_id == fb_user_id:
+        return True
+    else:
+        return False
+
 
 def search(request):
     """
@@ -135,7 +157,7 @@ def get_signature(request):
     """Serves as an endpoint to get a presigned post form
     """
     file_name = request.POST['file_name']
-    sig = tests.upload.generate_post_signature(settings.AWS_KEY_NAME, file_name)
+    sig = s3_generate_post_signature(settings.AWS_KEY_NAME, file_name)
     return JsonResponse(sig)
 
 def create_test(request):
@@ -152,6 +174,9 @@ def create_test(request):
     fb_response = requests.get('https://graph.facebook.com/me/groups', params={
         'access_token': request.POST['fb_token']
     })
+    if 'error' in fb_response.json():
+        return JsonResponse({'error': 'invalid_fb_token'}, status=500)
+
     fb_groups = fb_response.json()['data']
     fb_group_id = settings.FB_GROUP_ID
     # Finds the group with the ID or returns None
@@ -185,4 +210,16 @@ def create_test(request):
 
     return JsonResponse({'redirect': redirect_url})
        
-    
+def test_delete(request, pk):
+    if test_is_owner_helper(pk, request.POST.get('fb_token')):
+        test_images = TestImage.objects.filter(test__id=pk)
+        for test_image in test_images:
+            file = test_image.file
+            # If 2 TestImage objects share the resource, don't delete it
+            if TestImage.objects.filter(file=file).count() == 0:
+                s3_delete_object(file)
+            test_image.delete()
+        Test.objects.filter(id=pk).delete()
+        return HttpResponse()
+    else:
+        return JsonResponse({'error': 'is_not_owner'}, status=500)

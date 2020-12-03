@@ -2,6 +2,9 @@
 import $ from "cash-dom";
 import Glide from "@glidejs/glide";
 import downloadAndZip  from "./downloadTest";
+import {ajax} from "./ajax";
+import { getCookie } from "./cookies";
+import BulmaNotification from "./bulma-notification";
 
 const glide = new Glide(".glide").mount();
 
@@ -44,3 +47,41 @@ $('#printTestButton').on('click', () => {
     }, 1000);
 });
 
+checkIfTestOwner();
+
+function checkIfTestOwner() {
+    if(getCookie('FBConnected') == null || getCookie('FBConnected') == 0){
+        return;
+    }
+
+    const apiToken = getCookie('FBAccessToken');
+    ajax('POST', window.location.pathname + '/is-owner', {fb_token: apiToken}, getCookie('csrftoken'), 'json').then((xhr) => {
+        if(xhr.status == 200) {
+            if(xhr.response.owner){
+                $('#deleteButton').show();
+            }
+        }
+    });
+}
+
+$('#deleteButton').on('click', () => {
+    $('#deleteModal').addClass('is-active');
+})
+
+$('.cancel-modal').on('click', (e) => {
+    $(e.target).parents('.modal').removeClass('is-active')
+})
+
+$('#deleteModalButton').on('click', () => {
+    ajax('POST', window.location.pathname + '/delete', {fb_token: getCookie('FBAccessToken')}, getCookie('csrftoken'), 'json').then((xhr) => {
+        if(xhr.status == 200) {
+            const notification = new BulmaNotification('Test je bil uspešno odstranjen!', '.content', {
+                type: 'success',
+                prepend: true
+            });
+            $('#deleteModal').removeClass('is-active');
+        } else {
+            console.error('User is not owner of test!');
+        }
+    })
+});

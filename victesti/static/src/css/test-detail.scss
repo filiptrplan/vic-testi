@@ -75,3 +75,11 @@ $glide-height: 600px;
     .button {
     }
 }
+
+#deleteButton {
+    display: none;
+}
+
+.button.card-footer-item {
+    margin: 0.5rem;
+}

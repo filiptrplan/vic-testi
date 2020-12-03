@@ -17,7 +17,7 @@ s3 = boto3.client(
     config=my_config
 )
 
-def generate_post_signature(key_name, file_name):
+def s3_generate_post_signature(key_name, file_name):
     post = s3.generate_presigned_post(
         Fields={
             'Content-Type': 'image/jpeg,image/png',
@@ -32,3 +32,10 @@ def generate_post_signature(key_name, file_name):
         Key=key_name + '/' + file_name
     )
     return post
+
+def s3_delete_object(file_url):
+    file_key = file_url.rsplit(settings.AWS_BUCKET_NAME+'/')[1]
+    response = s3.delete_object(
+        Bucket=settings.AWS_BUCKET_NAME,
+        Key=file_key
+    )

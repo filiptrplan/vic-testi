@@ -1,6 +1,21 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+<div class="modal" id="deleteModal">
+  <div class="modal-background cancel-modal"></div>
+  <div class="modal-content">
+    <div class="card">
+  <div class="card-content">
+    <p>Ali si res želite izbrisati ta test?</p>
+  </div>
+  <footer class="card-footer">
+        <button class="button is-danger card-footer-item" id="deleteModalButton">Izbriši test</button>
+        <button class="cancel-modal button card-footer-item" id="cancelModalButton">Prekliči</button>
+  </footer>
+</div>
+  </div>
+  <button class="modal-close cancel-modal is-large" aria-label="close"></button>
+</div>
 <div class="test-info">
     <div class="has-text-left">
         <p><strong>Profesor: </strong> {{ test.professor}} ({{test.professor.subject}}) </p>
@@ -11,6 +26,7 @@
     <br class="line-break">
     <div class="has-text-right">
         <p><strong>Letnik: </strong> {{ test.year}}. letnik </p>
+        <button class="button is-danger" id="deleteButton">Izbriši test</button>
     </div>
 </div>
 <div class="glide-container">
