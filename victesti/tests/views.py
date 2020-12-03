@@ -216,7 +216,7 @@ def test_delete(request, pk):
         for test_image in test_images:
             file = test_image.file
             # If 2 TestImage objects share the resource, don't delete it
-            if TestImage.objects.filter(file=file).count() == 0:
+            if TestImage.objects.filter(file=file).count() < 2:
                 s3_delete_object(file)
             test_image.delete()
         Test.objects.filter(id=pk).delete()
