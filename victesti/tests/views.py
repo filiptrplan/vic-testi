@@ -155,8 +155,8 @@ def create_test(request):
     fb_groups = fb_response.json()['data']
     fb_group_id = settings.FB_GROUP_ID
     # Finds the group with the ID or returns None
-    fbGroupAuth = next((x for x in fb_groups if x['id'] == fb_group_id), None)
-    if(fbGroupAuth is None):
+    fb_group_auth = next((x for x in fb_groups if x['id'] == fb_group_id), None)
+    if(fb_group_auth is None):
         return JsonResponse({'error': 'not_group_member'}, status=500)
 
     fb_response = requests.get('https://graph.facebook.com/me', params={
