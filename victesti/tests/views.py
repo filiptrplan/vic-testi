@@ -177,6 +177,7 @@ def create_test(request):
 
     file_locations = request.POST.getlist('fileLocations')
     for location in file_locations:
+        test_image = TestImage(file=location)
         test_image.test = test
         test_image.save()
 
