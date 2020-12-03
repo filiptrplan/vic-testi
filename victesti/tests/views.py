@@ -146,7 +146,7 @@ def create_test(request):
         
     if(request.POST['year'] == 'undefined' or request.POST['professorId'] == 'undefined' or \
     len(request.POST.getlist('fileLocations')) == 0):
-        return HttpResponseBadRequest()
+        return JsonResponse({'error': 'bad_data'}, status=500)
 
     # Check if user is member of the group
     fb_response = requests.get('https://graph.facebook.com/me/groups', params={

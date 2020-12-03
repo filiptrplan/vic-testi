@@ -1,9 +1,12 @@
 /* eslint-disable no-undef */
 import Choices from "choices.js";
+import BulmaNotification from "./bulma-notification";
 import $ from "cash-dom";
 import uploadFile from "./s3upload";
 import { ajax } from "./ajax";
 import { getCookie } from "./cookies";
+
+const inputErrorTemplate = $('#inputErrorTextTemplate').contents();
 
 // File input selectize
 const fileChoices = new Choices("#filesInput", {
@@ -84,15 +87,65 @@ yearChoices.setChoices([
 $("#uploadButton").on("click", () => {
     if(getCookie('FBConnected') == null || getCookie('FBConnected') == 0){
         // Throw error that you must be logged in to upload
-        console.error('Not logged in!');
+        const notification = new BulmaNotification(
+            "Niste prijavljeni v Facebook!",
+            "#uploadContainer",
+            {
+                classes: ["column", "is-6"],
+                type: "danger",
+            }
+        );
         return;
     }
-    const files = fileChoices.getValue(true);
-    if (files.length != 0) {
-        uploadAllFiles(files, 0);
-        
+    if(!checkInputErrors()){
+        uploadAllFiles(fileChoices.getValue(true), 0);
     }
 });
+
+function checkInputErrors() {
+    const files = fileChoices.getValue(true);
+    let isError = false;
+    if(yearChoices.getValue(true) === undefined){
+        handleInputError(yearChoices.containerOuter.element, false, 'Letnik ni izbran');        
+        isError = true;
+    } else {
+        handleInputError(yearChoices.containerOuter.element, true);
+    }
+    if(profChoices.getValue(true) === undefined){
+        handleInputError(profChoices.containerOuter.element, false, 'Profesor ni izbran');        
+        isError = true;
+    } else {
+        handleInputError(profChoices.containerOuter.element, true);
+    }
+    if (files.length == 0) {
+        handleInputError(fileChoices.containerOuter.element, false, 'Prosim izberite vsaj eno datoteko');
+        isError = true;
+    } else {
+        handleInputError(fileChoices.containerOuter.element, true);
+    }
+    if ($("#noteCheckbox").get()[0].checked && $("#noteInput").val() == "") {
+        handleInputError('#noteInput', false, 'Opomba ne sme biti prazna');
+        isError = true;
+    } else {
+        handleInputError('#noteInput', true);
+    }
+        return isError;
+}
+
+function handleInputError(inputElement, remove, message=''){
+    let outerElement = $(inputElement);
+    let outerContainer = outerElement.parents(".input-container");
+    if(!remove && outerElement.hasClass('is-danger') == false) {
+        let inputError = inputErrorTemplate.clone();
+        outerElement.addClass('is-danger');
+        outerContainer.append(inputError);
+        inputError.html(message);
+    }
+    if (remove) {
+        outerElement.removeClass('is-danger')
+        outerContainer.find('.input-error').detach();
+    }
+}
 
 let fileLocations = [];
 const uploadFinishEvent = new Event('upload-finished');
@@ -111,11 +164,31 @@ document.addEventListener("upload-finished", () => {
             if (xhr.status == 200) {
                 window.location.pathname = xhr.response.redirect;
             } else {
-                // Failed
+                handleError(xhr.response.error);
             }
         }
     );
 });
+
+function handleError(error) {
+    let message = ''
+    switch (error) {
+        case 'bad_data':
+            message = 'Podani podatki so neustrezni.';
+            break;
+        case 'not_group_member':
+            message = 'Niste član Facebook skupine Viški Gimnazijci.'
+            break;
+        default:
+            message = 'Neznana strežniška napaka. Prosimo kontaktirajte razvijalca.';
+            break;
+    }
+    const notification = new BulmaNotification(message, "#uploadContainer", {
+        classes: ["column", "is-6"],
+        type: "danger",
+    });
+}
+
 
 function uploadAllFiles(files, i) {
     if (i == 0) {
@@ -180,5 +253,3 @@ $('#noteCheckbox').on('click', (e) => {
         $('#noteInput').hide();
     }
 });
-
-$('.choices').addClass('is-danger');
