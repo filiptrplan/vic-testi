@@ -253,3 +253,10 @@ $('#noteCheckbox').on('click', (e) => {
         $('#noteInput').hide();
     }
 });
+
+if(getCookie('FBConnected') != 1) {
+    const warning = new BulmaNotification('Za nalaganje testov morate biti prijavljeni s Facebookom!', '.content', {
+        prepend: true,
+        type: 'warning'
+    })
+}
