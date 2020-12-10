@@ -27,7 +27,8 @@ $('#downloadTestButton').on('click', () => {
         urls.push($(el).attr('src'));
     });
     $('#fileProgressContainer').show();
-    downloadAndZip(urls, updateProgressBar);
+    let id = window.location.href.split("/").slice(-1)[0];
+    downloadAndZip(urls, id, updateProgressBar);
 });
 
 function updateProgressBar(e) {

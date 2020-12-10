@@ -7,9 +7,11 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, TrigramSim
 from django.db.models.functions import Greatest
 from django.core.paginator import Paginator
 from django.urls import reverse
-from tests.models import Professor, TestImage, Test, Subject
+from django.core import serializers
+from django.forms.models import model_to_dict
 import requests
 from tests.s3 import s3_generate_post_signature, s3_delete_object
+from tests.models import Professor, TestImage, Test, Subject
 
 def test_is_owner(request, pk):
     if test_is_owner_helper(pk, request.POST.get('fb_token')):
@@ -133,6 +135,15 @@ class TestDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['files'] = TestImage.objects.filter(test=self.get_object())
         return context
+
+def test_ajax(request, pk):
+    test = Test.objects.get(id=pk)
+    return JsonResponse({
+        'id': test.id,
+        'professor_first_name': test.professor.first_name,
+        'professor_last_name': test.professor.last_name,
+        'year': test.year
+    })
 
 def test_links(request, pk):
     # Ali pa Test.objects.get(pk=pk).test_image_set.all()

@@ -12,5 +12,6 @@ urlpatterns = [
     path('<int:pk>', TestDetailView.as_view(), name='tests.detail'),
     path('<int:pk>/links', views.test_links, name='tests.links'),
     path('<int:pk>/is-owner', views.test_is_owner, name='test.owner'),
-    path('<int:pk>/delete', views.test_delete, name='test.delete')
+    path('<int:pk>/delete', views.test_delete, name='test.delete'),
+    path('<int:pk>/ajax', views.test_ajax, name='test.ajax')
 ]

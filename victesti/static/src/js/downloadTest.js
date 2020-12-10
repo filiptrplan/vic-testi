@@ -1,6 +1,7 @@
 import JsZip from "jszip";
 import FileSaver from "file-saver";
 import { ajax } from "./ajax";
+import { getCookie } from "./cookies";
 
 function download(url, progressCallback) {
     return ajax("GET", url, [], "", "blob", progressCallback).then(
@@ -12,19 +13,19 @@ function downloadMany(urls, progressCallback) {
     return Promise.all(urls.map((url) => download(url, progressCallback)));
 }
 
-function exportZip(blobs, fileNames) {
+function exportZip(blobs, fileNames, zipFileName) {
     const zip = JsZip();
     blobs.forEach((blob, i) => {
-        zip.file(fileNames[i], blob);
+        let extension = fileNames[i].split('.').slice(-1)[0];
+        zip.file(`${zipFileName}-${i}.${extension}`, blob);
     });
     zip.generateAsync({ type: "blob" }).then((zipFile) => {
-        const currentDate = new Date().getTime();
-        const fileName = `test-${currentDate}.zip`;
+        const fileName = `${zipFileName}.zip`;
         return FileSaver.saveAs(zipFile, fileName);
     });
 }
 
-export default function downloadAndZip (urls, progressCallback={}) {
+export default function downloadAndZip (urls, testId, progressCallback={}) {
     let fileCountProgress = 1;
     const fileCountTotal = urls.length;
     const customCallback = (e) => {
@@ -51,6 +52,10 @@ export default function downloadAndZip (urls, progressCallback={}) {
         url.slice(url.lastIndexOf("/") + 1, url.length)
     );
     return downloadMany(urls, customCallback).then((blobs) => {
-        exportZip(blobs, fileNames);
+        ajax('GET', `/tests/${testId}/ajax`, [], getCookie('csrftoken'), 'json').then((xhr) => {
+            let r = xhr.response;
+            let zipFileName = `test-${r.id}-${r.professor_first_name.toLowerCase()}-${r.professor_last_name.toLowerCase()}-${r.year}-letnik`;
+            exportZip(blobs, fileNames, zipFileName);
+        })
     });
 }

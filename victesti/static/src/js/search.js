@@ -249,7 +249,7 @@ function refreshHandlers() {
         let progressBar = progressContainer.children(".file-upload-bar");
         animateProgressBar(progressBar);
         ajax("GET", `/tests/${id}/links`, [], csrftoken, "json").then((xhr) => {
-            downloadAndZip(xhr.response.links, (e) => {
+            downloadAndZip(xhr.response.links, id, (e) => {
                 updateProgressBar(e, progressContainer);
             });
         });
