@@ -1,18 +1,19 @@
 import $ from "cash-dom";
 import { setCookie, getCookie, eraseCookie } from "./cookies";
+import BulmaNotification from './bulma-notification';
 
-let facebookConnected = false;
+let facebookConnectedInit = false;
 
 if(getCookie('FBConnected') == null){
     setCookie('FBConnected', '0');
 }
 
 if(getCookie('FBConnected') == 0) {
-    facebookConnected = false;
+    facebookConnectedInit = false;
     $("#facebookLoginButton").html("PRIJAVA S FACEBOOKOM");
     $("#facebookName").html("");
 } else if (getCookie('FBConnected') == 1){
-    facebookConnected = true;
+    facebookConnectedInit = true;
     $("#facebookLoginButton").html("ODJAVA");
     $("#facebookName").html(`(${getCookie('FBName')})`);
 }
@@ -26,7 +27,7 @@ $(document).ready(function () {
     });
 
     $('#facebookLoginButton').on('click', () => {
-        if(facebookConnected) {
+        if(facebookConnectedInit) {
             FB.logout(handleConnected); 
         } else {
             FB.login(handleConnected, { scope: "groups_access_member_info" });
@@ -46,7 +47,6 @@ window.fbAsyncInit = function () {
 
 function handleConnected(response){
     if (response.status == "connected") {
-        facebookConnected = true;
         $('#facebookLoginButton').html('ODJAVA');
         FB.api('/me', (response) => {
             $('#facebookName').html(`(${response.name})`);
@@ -55,7 +55,14 @@ function handleConnected(response){
         setCookie('FBConnected', '1');
         setCookie('FBAccessToken', response.authResponse.accessToken);
     } else {
-        facebookConnected = false;
+        if(facebookConnectedInit == true) {
+            const warning = new BulmaNotification(`
+            Za pravilno delovanje strani prosim dovolite t.i. 3rd party cookies. Če uporabljate Chrome prosimo, da kliknite ikono očesa na desni strani naslovne vrstice in dovolite piškotke.
+            `, '.content', {
+                prepend: true,
+                type: 'warning'
+            });
+        }
         $('#facebookLoginButton').html('PRIJAVA S FACEBOOKOM');
         $('#facebookName').html('');
         setCookie('FBConnected', '0');
