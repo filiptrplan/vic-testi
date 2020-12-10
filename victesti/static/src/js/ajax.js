@@ -11,6 +11,7 @@ export function ajax(method, url, parameters=[], csrftoken='', responseType='', 
             "application/x-www-form-urlencoded"
         );
         xhr.upload.addEventListener("progress", progressCallback);
+        xhr.addEventListener("progress", progressCallback);
         if(csrftoken != '') xhr.setRequestHeader("X-CSRFToken", csrftoken);
         if(responseType != '') xhr.responseType = responseType;
 

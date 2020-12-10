@@ -50,11 +50,18 @@
         </div>
     </div>
 </div>
-    <div id="imageButtons" class="mt-6 buttons is-centered">
+<div  id="fileProgressContainer" class="columns is-centered" style="display: none;">
+    <div class="column is-6">
+        <p class="mb-0 mt-1" id="fileUploadText">Prenaša se datoteka... [1/4]</p>
+        <progress data-desired="0" id="fileUploadBar" class="progress is-primary" value="0" max="100"></progress>
+    </div>
+</div>
+    <div id="imageButtons" class="mt-3 buttons is-centered">
         <button id="openImageButton" class="button mx-3 is-black has-text-weight-light is-medium">Odpri sliko</button>
         <button id="downloadTestButton" class="button mx-3 is-black has-text-weight-light is-medium">Prenesi test</button>
         <button id="printTestButton" class="button mx-3 is-black has-text-weight-light is-medium">Sprintaj test</button>
     </div>
+
 {% load static %}
 <script src="{% static 'js/testDetail.bundle.js' %}"></script>
 {% endblock content %}

@@ -26,8 +26,41 @@ $('#downloadTestButton').on('click', () => {
     $(".gallery-image").each((ind, el) => {
         urls.push($(el).attr('src'));
     });
-    downloadAndZip(urls);
+    $('#fileProgressContainer').show();
+    downloadAndZip(urls, updateProgressBar);
 });
+
+function updateProgressBar(e) {
+    $('#fileUploadText').html(`Prenaša se datoteka...[${e.fileNumber}/${e.fileTotal}]`);
+    progressBar.data("desired", e.totalPercentComplete.toString());
+    if(e.isComplete) {
+        $('#fileUploadText').html('Prenašanje končano!');
+        setTimeout(() => {
+            $('#fileProgressContainer').hide()
+        }, 300);
+    }
+}
+
+let progressAnimationSpeed = 2;
+const progressBar = $("#fileUploadBar");
+
+// Animate progress bar
+setInterval(() => {
+    let progressComplete = parseFloat(progressBar.data("desired"));
+    let progressCurrent = parseFloat(progressBar.attr("value"));
+    if (progressComplete !== progressCurrent) {
+        if (
+            Math.abs(progressCurrent - progressComplete) >
+            progressAnimationSpeed
+        ) {
+            progressCurrent += progressAnimationSpeed;
+        } else {
+            progressCurrent = progressComplete;
+        }
+        progressBar.attr("value", progressCurrent.toString());
+    }
+}, 5);
+
 
 $('#printTestButton').on('click', () => {
     let docString = "";
