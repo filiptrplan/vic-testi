@@ -1,3 +1,4 @@
+from tests.models import TestImage
 import boto3
 from django.conf import settings
 from botocore.config import Config
@@ -39,3 +40,8 @@ def s3_delete_object(file_url):
         Bucket=settings.AWS_BUCKET_NAME,
         Key=file_key
     )
+
+def s3_delete_objects(file_urls):
+    for url in file_urls:
+        if TestImage.objects.filter(file=url).count() == 0:
+            s3_delete_object(url)

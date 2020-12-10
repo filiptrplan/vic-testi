@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.core import serializers
 from django.forms.models import model_to_dict
 import requests
-from tests.s3 import s3_generate_post_signature, s3_delete_object
+from tests.s3 import s3_delete_objects, s3_generate_post_signature, s3_delete_object
 from tests.models import Professor, TestImage, Test, Subject
 
 def test_is_owner(request, pk):
@@ -174,11 +174,15 @@ def get_signature(request):
 def create_test(request):
     """Creates a test object from parameters
     """
+    file_locations = request.POST.getlist('fileLocations')
+
     if request.method != "POST":
+        s3_delete_objects(file_locations)
         return HttpResponseBadRequest()
         
     if(request.POST['year'] == 'undefined' or request.POST['professorId'] == 'undefined' or \
     len(request.POST.getlist('fileLocations')) == 0):
+        s3_delete_objects(file_locations)
         return JsonResponse({'error': 'bad_data'}, status=500)
 
     # Check if user is member of the group
@@ -186,6 +190,7 @@ def create_test(request):
         'access_token': request.POST['fb_token']
     })
     if 'error' in fb_response.json():
+        s3_delete_objects(file_locations)
         return JsonResponse({'error': 'invalid_fb_token'}, status=500)
 
     fb_groups = fb_response.json()['data']
@@ -193,6 +198,7 @@ def create_test(request):
     # Finds the group with the ID or returns None
     fb_group_auth = next((x for x in fb_groups if x['id'] == fb_group_id), None)
     if(fb_group_auth is None):
+        s3_delete_objects(file_locations)
         return JsonResponse({'error': 'not_group_member'}, status=500)
 
     fb_response = requests.get('https://graph.facebook.com/me', params={
@@ -211,7 +217,7 @@ def create_test(request):
 
     test.save()
 
-    file_locations = request.POST.getlist('fileLocations')
+    
     for location in file_locations:
         test_image = TestImage(file=location)
         test_image.test = test
