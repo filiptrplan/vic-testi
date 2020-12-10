@@ -192,6 +192,47 @@ function getSearchFromParams() {
     }
 }
 
+function updateProgressBar(e, progressContainer) {
+    let progressBar = progressContainer.children(".file-upload-bar");
+    let progressText = progressContainer.children('.file-upload-text');
+    progressText.html(
+        `Prenaša se datoteka...[${e.fileNumber}/${e.fileTotal}]`
+    );
+    progressBar.data("desired", e.totalPercentComplete.toString());
+    console.log(e.totalPercentComplete.toString());
+    if (e.isComplete) {
+        progressText.html("Prenašanje končano!");
+        setTimeout(() => {
+            progressContainer.hide();
+        }, 300);
+    }
+}
+
+const progressAnimationSpeed = 2;
+
+function animateProgressBar(progressBar) {
+    // Animate progress bar
+    setInterval(
+        (progressBar) => {
+            let progressComplete = parseFloat(progressBar.data("desired"));
+            let progressCurrent = parseFloat(progressBar.attr("value"));
+            if (progressComplete !== progressCurrent) {
+                if (
+                    Math.abs(progressCurrent - progressComplete) >
+                    progressAnimationSpeed
+                ) {
+                    progressCurrent += progressAnimationSpeed;
+                } else {
+                    progressCurrent = progressComplete;
+                }
+                progressBar.attr("value", progressCurrent.toString());
+            }
+        },
+        5,
+        progressBar
+    );
+}
+
 function refreshHandlers() {
     $(".test-result").on("click", (e) => {
         if($(e.target).hasClass("test-title")) return;
@@ -203,8 +244,14 @@ function refreshHandlers() {
     });
     $(".downloadTestButton").on("click", (e) => {
         let id = $(e.target).siblings("input[type='hidden']").attr("value");
+        let progressContainer = $(e.target).parents('.test-dropdown').children('.file-progress-container');
+        progressContainer.show();
+        let progressBar = progressContainer.children(".file-upload-bar");
+        animateProgressBar(progressBar);
         ajax("GET", `/tests/${id}/links`, [], csrftoken, "json").then((xhr) => {
-            downloadAndZip(xhr.response.links);
+            downloadAndZip(xhr.response.links, (e) => {
+                updateProgressBar(e, progressContainer);
+            });
         });
     });
 

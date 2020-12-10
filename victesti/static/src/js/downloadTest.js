@@ -30,13 +30,13 @@ export default function downloadAndZip (urls, progressCallback={}) {
     const customCallback = (e) => {
         let isComplete = false;
         let percentComplete = (e.loaded / e.total) * 100;
-        let totalPercentComplete = (percentComplete / fileCountTotal) * fileCountProgress;
+        let totalPercentComplete = (percentComplete / fileCountTotal) + (fileCountProgress - 1) * (100 / fileCountTotal);
         if(e.loaded == e.total && fileCountProgress == fileCountTotal){
             isComplete = true;
         }
 
         progressCallback({
-            fileNumber: fileCountProgress,
+            fileNumber: fileCountProgress+1,
             fileTotal: fileCountTotal,
             percentComplete: percentComplete,
             totalPercentComplete: totalPercentComplete,
