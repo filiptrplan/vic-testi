@@ -3,6 +3,7 @@ import { setCookie, getCookie, eraseCookie } from "./cookies";
 import BulmaNotification from './bulma-notification';
 
 let facebookConnectedInit = false;
+let facebookInitCheck = false;
 
 if(getCookie('FBConnected') == null){
     setCookie('FBConnected', '0');
@@ -27,8 +28,8 @@ $(document).ready(function () {
     });
 
     $('#facebookLoginButton').on('click', () => {
-        if(facebookConnectedInit) {
-            FB.logout(handleConnected); 
+        if(getCookie('FBConnected') == 1) {
+            FB.api('/me/permissions', 'delete', handleConnected);
         } else {
             FB.login(handleConnected, { scope: "groups_access_member_info" });
         }
@@ -40,12 +41,15 @@ window.fbAsyncInit = function () {
         appId: "667076580621527",
         autoLogAppEvents: true,
         xfbml: true,
+        cookie: true,
         version: "v9.0",
     });
     FB.getLoginStatus(handleConnected);
 };
 
 function handleConnected(response){
+    console.log(response);
+    console.log(facebookConnectedInit, facebookInitCheck);
     if (response.status == "connected") {
         $('#facebookLoginButton').html('ODJAVA');
         FB.api('/me', (response) => {
@@ -55,17 +59,19 @@ function handleConnected(response){
         setCookie('FBConnected', '1');
         setCookie('FBAccessToken', response.authResponse.accessToken);
     } else {
-        if(facebookConnectedInit == true) {
+        if(facebookConnectedInit && !facebookInitCheck) {
             const warning = new BulmaNotification(`
             Za pravilno delovanje strani prosim dovolite t.i. 3rd party cookies. Če uporabljate Chrome prosimo, da kliknite ikono očesa na desni strani naslovne vrstice in dovolite piškotke.
             `, '.content', {
                 prepend: true,
                 type: 'warning'
             });
+        } else {
+            $('#facebookLoginButton').html('PRIJAVA S FACEBOOKOM');
+            $('#facebookName').html('');
+            setCookie('FBConnected', '0');
+            eraseCookie('FBAccessToken');
         }
-        $('#facebookLoginButton').html('PRIJAVA S FACEBOOKOM');
-        $('#facebookName').html('');
-        setCookie('FBConnected', '0');
-        eraseCookie('FBAccessToken');
+        facebookInitCheck = true;
     }
 }
