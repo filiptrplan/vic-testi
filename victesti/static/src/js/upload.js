@@ -260,3 +260,17 @@ if(getCookie('FBConnected') != 1) {
         type: 'warning'
     })
 }
+
+function getUploadFromParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("professor")) {
+        profChoices.setChoiceByValue(parseInt(urlParams.get("professor")));
+    }
+    if (urlParams.has("year")) {
+        yearChoices.setChoiceByValue(parseInt(urlParams.get("year")));
+    }
+}
+
+$(document).ready(() => {
+    getUploadFromParams();
+});

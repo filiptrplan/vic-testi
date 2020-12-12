@@ -39,7 +39,7 @@ $(document).ready(function () {
 window.fbAsyncInit = function () {
     FB.init({
         appId: "667076580621527",
-        autoLogAppEvents: true,
+        //autoLogAppEvents: true,
         xfbml: true,
         cookie: true,
         version: "v9.0",

@@ -153,6 +153,7 @@ function search(query){
             refreshHandlers();
             generatePagination(currentPage, response.page_count);
         } else {
+            getUploadRequestLink();
             $("#noResultsContainer").show();
         }
         $(".loader-wrapper").removeClass("is-active");
@@ -181,7 +182,6 @@ function getSearchFromParams() {
         subjChoices.setChoiceByValue(parseInt(urlParams.get("subject")));
     }
     if(urlParams.has("year")){
-        console.log(urlParams.get("year"));
         yearChoices.setChoiceByValue(parseInt(urlParams.get("year")));
     }
     if(urlParams.has("search")){
@@ -390,4 +390,31 @@ $(document).on('keydown', (e) => {
         console.log(searchFromEnterTimestamp);
         search($("#searchInput").val());
     }
+});
+
+function getUploadRequestLink() {
+    const baseUrl = new URL("/tests/upload", window.location.origin);
+
+    const yearParam = yearChoices.getValue(true);
+    const profParam = profChoices.getValue(true);
+    let urlParams = new URLSearchParams();
+
+    if (typeof yearParam != "undefined") urlParams.set("year", yearParam);
+    if (typeof profParam != "undefined")
+        urlParams.set("professor", profParam);
+
+    const finalUrl = baseUrl + "?" + urlParams;
+    $("#requestUrlInput").val(finalUrl);
+}
+
+$('#copyUrlButton').on('click', () => {
+    const inputField = $('#requestUrlInput');
+    let temp = document.createElement('input');
+    $("body").append(temp);
+    $(temp).val(inputField.val()).get()[0].select();
+    document.execCommand("copy");
+    $(temp).remove();
+
+    $('#textCopied').show();
+    setTimeout(() => $('#textCopied').hide(), 3000);
 });

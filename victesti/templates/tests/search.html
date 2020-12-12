@@ -60,6 +60,20 @@ Iskanje
         <div id="resultsBox">
             <div id="noResultsContainer">
                 <h1 class="has-text-weight-light">Ni rezultatov.</h1>
+                <p class="mb-1">Lahko zahtevaš test tega profesorja od tega letnika, tako, da pošlješ to povezavo komurkoli, ki bi ga lahko naložil:</p>
+                <div id="requestUrlField" class="columns mt-1 mb-1">
+                    <div class="column is-8 field has-addons">
+                        <div class="control" id="requestUrlInputContainer">
+                            <input id="requestUrlInput" disabled class="input" type="text">
+                        </div>
+                        <div class="control">
+                            <button id="copyUrlButton" class="button">
+                            <span class="far fa-clipboard"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p id="textCopied" class="has-text-weight-light" style="display:none;">Povezava je bila kopirana!</p>
             </div>
             
             <div class="loader-wrapper">

@@ -91,3 +91,10 @@ $search-result-bg: $white-ter;
         display: flex;
     }
 }
+
+#requestUrlField {
+    justify-content: center; 
+    #requestUrlInputContainer {
+        width: 100%;
+    }
+}
