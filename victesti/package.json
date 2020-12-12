@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "yarn webpack --config webpack.config.js --mode development",
-    "prod": "yarn webpack --config webpack.config.js --mode production",
+    "prod": "yarn webpack --config webpack-production.config.js --mode production",
     "watch": "yarn webpack --config webpack.config.js --watch --mode development",
     "dev": "yarn webpack-dev-server --config webpack.config.js --mode development --env development --hot"
   },

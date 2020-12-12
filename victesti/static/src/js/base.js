@@ -59,7 +59,7 @@ function handleConnected(response){
     } else {
         if(facebookConnectedInit && !facebookInitCheck) {
             const warning = new BulmaNotification(`
-            Za pravilno delovanje strani prosim dovolite t.i. 3rd party cookies. Če uporabljate Chrome prosimo, da kliknite ikono očesa na desni strani naslovne vrstice in dovolite piškotke.
+            Za pravilno delovanje strani prosim dovolite VSE piškotke.
             `, '.content', {
                 prepend: true,
                 type: 'warning'
