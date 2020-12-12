@@ -199,7 +199,6 @@ function updateProgressBar(e, progressContainer) {
         `Prenaša se datoteka...[${e.fileNumber}/${e.fileTotal}]`
     );
     progressBar.data("desired", e.totalPercentComplete.toString());
-    console.log(e.totalPercentComplete.toString());
     if (e.isComplete) {
         progressText.html("Prenašanje končano!");
         setTimeout(() => {
@@ -387,7 +386,6 @@ $(document).on('keydown', (e) => {
         e.preventDefault();
         e.stopPropagation();
         searchFromEnterTimestamp = new Date().getTime();
-        console.log(searchFromEnterTimestamp);
         search($("#searchInput").val());
     }
 });
