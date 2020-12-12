@@ -48,8 +48,6 @@ window.fbAsyncInit = function () {
 };
 
 function handleConnected(response){
-    console.log(response);
-    console.log(facebookConnectedInit, facebookInitCheck);
     if (response.status == "connected") {
         $('#facebookLoginButton').html('ODJAVA');
         FB.api('/me', (response) => {
