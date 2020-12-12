@@ -2,11 +2,13 @@
 // Webpack uses this to work with directories
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const path = require("path");
 
 // This is the main configuration object.
 // Here you write different options and tell Webpack what to do
 module.exports = {
+    mode: "production",
     // Path to your entry point. From this file Webpack will begin his work
     entry: {
         babel: "babel-polyfill",
@@ -81,7 +83,8 @@ module.exports = {
         }),
     ],
     optimization: {
-        runtimeChunk: 'single'
+        runtimeChunk: "single",
+        minimizer: [new CssMinimizerPlugin()]
     },
     resolve: {
         fallback: {
@@ -89,4 +92,5 @@ module.exports = {
             buffer: require.resolve("buffer/"),
         },
     },
+    devtool: "source-map",
 };
