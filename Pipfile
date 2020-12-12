@@ -9,6 +9,10 @@ python-dotenv = "*"
 boto3 = "*"
 psycopg2-binary = "*"
 requests = "*"
+django-extensions = "*"
+werkzeug = "*"
+pyopenssl = "*"
+uwsgi = "*"
 
 [dev-packages]
 
