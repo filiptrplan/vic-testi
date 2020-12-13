@@ -13,6 +13,7 @@ temp/
 # collect static files
 static/root/*
 static/root/
+root/
 
 # Distribution / packaging
 .Python

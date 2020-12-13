@@ -7,7 +7,7 @@ WORKDIR /usr/local/
 
 # GET ALL PROGRAMS NEEDED
 RUN apt-get -yqq update
-RUN apt-get -yqq install apt-utils curl python3 python3-pip pipenv
+RUN apt-get -yqq install apt-utils curl python3 python3-pip
 RUN curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get -yqq install nodejs
@@ -17,13 +17,15 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN pipenv install --system --deploy --ignore-pipfile
-RUN pipenv shell
 
-WORKDIR victesti/
+RUN pip3 install -r requirements.txt
+
+WORKDIR /usr/src/app/victesti/
 
 RUN yarn install && \
     yarn prod
 
-RUN python3 manage.py collectstatic
+RUN python3 manage.py collectstatic --noinput
 
+WORKDIR /usr/src/app
+CMD ["sh", "startup.sh"]

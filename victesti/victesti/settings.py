@@ -23,13 +23,18 @@ load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
+# DEPLOYMETN SETTINGS
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'wr7g(i)s!1++=a2#g8q4w6#na!%2*$j7(0hzy##hgs2)@*mn@a'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 
 # Application definition
@@ -152,3 +157,7 @@ AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
 AWS_KEY_NAME = os.getenv('AWS_KEY_NAME')
 
 FB_GROUP_ID = os.getenv('FB_GROUP_ID')
+
+ADMIN_USERNAME= os.getenv('ADMIN_USERNAME')
+ADMIN_EMAIL= os.getenv('ADMIN_EMAIL')
+ADMIN_PASSWORD= os.getenv('ADMIN_PASSWORD')
