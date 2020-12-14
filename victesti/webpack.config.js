@@ -69,17 +69,20 @@ module.exports = {
         aggregateTimeout: 300,
     },
     devServer: {
-        contentBase: "./static/dist/",
-        publicPath: "/static/",
-        writeToDisk: true,
-        hot: true,
+        static: [
+            {
+                directory: path.resolve(__dirname, 'static/dist'),
+                publicPath: '/static/',
+                watch: true
+            }
+        ],
         proxy: {
             "!/static/**": {
                 target: "http://localhost:8000", // points to django dev server
                 changeOrigin: true,
             },
         },
-        http2: true,
+        https: true,
     },
     optimization: {
         runtimeChunk: "single",
