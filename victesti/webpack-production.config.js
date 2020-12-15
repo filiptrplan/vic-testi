@@ -92,5 +92,4 @@ module.exports = {
             buffer: require.resolve("buffer/"),
         },
     },
-    devtool: "source-map",
 };
