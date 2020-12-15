@@ -255,7 +255,7 @@ $('#noteCheckbox').on('click', (e) => {
 });
 
 if(getCookie('FBConnected') != 1) {
-    const warning = new BulmaNotification('Za nalaganje testov morate biti prijavljeni s Facebookom!', '.content', {
+    const warning = new BulmaNotification('Trenutno je nalaganje začasno onemogočeno zaradi težav s Facebookom.', '.content', {
         prepend: true,
         type: 'warning'
     })
