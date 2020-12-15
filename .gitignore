@@ -15,6 +15,9 @@ static/root/*
 static/root/
 root/
 
+db.env
+aws-backup.env
+
 # Distribution / packaging
 .Python
 build/

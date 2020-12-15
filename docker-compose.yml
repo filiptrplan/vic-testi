@@ -2,17 +2,24 @@ version: '3'
 services:
     db:
         env_file: 
-            - .env
+            - db.env
         image: postgres
         volumes: 
             - postgresql-data:/var/lib/postgresql/data/pgdata
         ports:
             - 5432:5432
     web:
-        build: .
+        build: victesti
         ports:
             - 4880:4880
         depends_on:
+            - db
+    db-backup:
+        env_file:
+            - db.env
+            - aws-backup.env
+        build: db-backup
+        depends_on: 
             - db
 
 volumes:

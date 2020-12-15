@@ -1,0 +1,1 @@
+0 3 * * * root sh /usr/src/app/backupdb.sh >> /var/log/cron.log 2>&1
