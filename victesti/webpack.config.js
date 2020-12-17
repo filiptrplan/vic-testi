@@ -71,13 +71,17 @@ module.exports = {
     devServer: {
         static: [
             {
-                directory: path.resolve(__dirname, 'static/dist'),
-                publicPath: '/static/',
-                watch: true
-            }
+                directory: path.resolve(__dirname, "static/dist"),
+                publicPath: "/static/",
+                watch: true,
+            },
         ],
         proxy: {
             "!/static/**": {
+                target: "http://localhost:8000", // points to django dev server
+                changeOrigin: true,
+            },
+            "/static/admin/**": {
                 target: "http://localhost:8000", // points to django dev server
                 changeOrigin: true,
             },

@@ -24,17 +24,20 @@ let searchFromEnterTimestamp = 0;
 
 const sortChoices = new Choices("#sortInput", {
     searchEnabled: false,
-    shouldSort: false
+    shouldSort: false,
+    itemSelectText: "",
 });
 const paginationChoices = new Choices("#paginationInput", {
     searchEnabled: false,
-    shouldSort: false
+    shouldSort: false,
+    itemSelectText: "",
 });
 
 // Load the choices for the professor select
 const profChoices = new Choices("#professorInput", {
     removeItemButton: true,
     searchPlaceholderValue: "Profesor",
+    itemSelectText: ''
 });
 
 professorList.forEach((professor) => {
@@ -45,6 +48,7 @@ professorList.forEach((professor) => {
 const subjChoices = new Choices("#subjectInput", {
     removeItemButton: true,
     searchPlaceholderValue: "Predmet",
+    itemSelectText: "",
 });
 
 subjectList.forEach((subject) => {
@@ -57,6 +61,7 @@ const yearChoices = new Choices("#yearInput", {
     removeItemButton: true,
     placeholderValue: "Letnik",
     searchEnabled: false,
+    itemSelectText: "",
 });
 
 // Have to do this this way in order to have no default

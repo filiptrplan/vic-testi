@@ -98,3 +98,13 @@ $search-result-bg: $white-ter;
         width: 100%;
     }
 }
+
+@media (min-width: 640px) {
+    .choices__list--dropdown .choices__item--selectable {
+        padding-right: 10px !important;
+    }
+} 
+
+.choices__list--dropdown {
+    word-break: normal !important;
+}
