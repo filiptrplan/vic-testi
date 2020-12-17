@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /usr/src/app
 currentDate=`date`
 echo "[Backup] $currentDate"
 echo "[Backup] Dumping DB..."
