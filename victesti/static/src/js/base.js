@@ -31,7 +31,7 @@ $(document).ready(function () {
         if(getCookie('FBConnected') == 1) {
             FB.api('/me/permissions', 'delete', handleConnected);
         } else {
-            FB.login(handleConnected, { scope: "groups_access_member_info" });
+            FB.login(handleConnected);
         }
     });
 });

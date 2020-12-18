@@ -124,7 +124,7 @@ function search(query){
     let params = 'search?search&' + getParamString(paramData);
     history.pushState({}, 'Iskanje', params);
     
-    ajax("GET", "/tests/search/ajax", paramData, csrftoken, "json").then((xhr) => {
+    ajax("GET", "/tests/api/search", paramData, csrftoken, "json").then((xhr) => {
         let response = xhr.response;
         if(response.tests.length != 0) {
             for(let testID in response.tests){
@@ -252,7 +252,7 @@ function refreshHandlers() {
         progressContainer.show();
         let progressBar = progressContainer.children(".file-upload-bar");
         animateProgressBar(progressBar);
-        ajax("GET", `/tests/${id}/links`, [], csrftoken, "json").then((xhr) => {
+        ajax("GET", `/tests/api/${id}/links`, [], csrftoken, "json").then((xhr) => {
             downloadAndZip(xhr.response.links, id, (e) => {
                 updateProgressBar(e, progressContainer);
             });
@@ -269,7 +269,7 @@ function refreshHandlers() {
         docString += pageStyle;
 
         let id = $(e.target).siblings("input[type='hidden']").attr("value");
-        ajax("GET", `/tests/${id}/links`, [], csrftoken, "json").then((xhr) => {
+        ajax("GET", `/tests/api/${id}/links`, [], csrftoken, "json").then((xhr) => {
             xhr.response.links.forEach((link) => {
                 docString += `<img src="${link}">`;
             });

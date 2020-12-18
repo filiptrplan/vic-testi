@@ -89,7 +89,8 @@ function checkIfTestOwner() {
     }
 
     const apiToken = getCookie('FBAccessToken');
-    ajax('POST', window.location.pathname + '/is-owner', {fb_token: apiToken}, getCookie('csrftoken'), 'json').then((xhr) => {
+    let id = window.location.href.split("/").slice(-1)[0];
+    ajax('POST', `/tests/api/${id}/is-owner`, {fb_token: apiToken}, getCookie('csrftoken'), 'json').then((xhr) => {
         if(xhr.status == 200) {
             if(xhr.response.owner){
                 $('#deleteButton').show();
@@ -107,7 +108,8 @@ $('.cancel-modal').on('click', (e) => {
 })
 
 $('#deleteModalButton').on('click', () => {
-    ajax('POST', window.location.pathname + '/delete', {fb_token: getCookie('FBAccessToken')}, getCookie('csrftoken'), 'json').then((xhr) => {
+    let id = window.location.href.split("/").slice(-1)[0];
+    ajax('POST', `/tests/api/${id}/delete`, {fb_token: getCookie('FBAccessToken')}, getCookie('csrftoken'), 'json').then((xhr) => {
         if(xhr.status == 200) {
             const notification = new BulmaNotification('Test je bil uspešno odstranjen!', '.content', {
                 type: 'success',

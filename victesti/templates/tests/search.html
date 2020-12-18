@@ -173,8 +173,8 @@ Iskanje
     {% for subject in subjects %}
     subjectList.push({id: {{subject.id}}, name: "{{subject}}"});
     {% endfor %}
-    const s3signatureURL = "{% url 'tests.signature' %}"
-    const createTestURL = "{% url 'tests.create' %}";
+    const s3signatureURL = "{% url 'tests.api.signature' %}"
+    const createTestURL = "{% url 'tests.api.create' %}";
 </script>
 {% csrf_token %}
 {% load static %}

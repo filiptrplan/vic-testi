@@ -1,17 +1,18 @@
 from django.urls import path
 
 from . import views
+from . import api_views
 from .views import TestDetailView
 
 urlpatterns = [
     path('search', views.search, name='tests.search'),
-    path('search/ajax', views.search_ajax, name='tests.search.ajax'),
-    path('upload', views.upload, name='tests.upload'),
-    path('get-signature', views.get_signature, name='tests.signature'),
-    path('create', views.create_test, name='tests.create'),
+    path('api/search', api_views.search, name='tests.api.search'),
+    path('upload', api_views.upload, name='tests.api.upload'),
+    path('get-signature', api_views.get_signature, name='tests.api.signature'),
+    path('api/create', api_views.create_test, name='tests.api.create'),
     path('<int:pk>', TestDetailView.as_view(), name='tests.detail'),
-    path('<int:pk>/links', views.test_links, name='tests.links'),
-    path('<int:pk>/is-owner', views.test_is_owner, name='test.owner'),
-    path('<int:pk>/delete', views.test_delete, name='test.delete'),
-    path('<int:pk>/ajax', views.test_ajax, name='test.ajax')
+    path('api/<int:pk>/links', api_views.test_links, name='tests.api.links'),
+    path('api/<int:pk>/is-owner', api_views.test_is_owner, name='test.api.owner'),
+    path('api/<int:pk>/delete', api_views.test_delete, name='test.api.delete'),
+    path('api/<int:pk>', api_views.test, name='test.api')
 ]
