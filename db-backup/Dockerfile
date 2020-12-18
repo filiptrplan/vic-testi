@@ -20,9 +20,6 @@ RUN chmod 0644 /etc/cron.d/crontab
 RUN crontab /etc/cron.d/crontab
 RUN touch /var/log/cron.log
 
-# Enables use of env variables with cronjob
-RUN printenv | grep -v "no_proxy" >> /etc/environment
-
 RUN chmod 0744 backupdb.sh
 
-CMD cron && tail -f /var/log/cron.log
+CMD printenv | grep -v "no_proxy" >> /etc/environment && cron && tail -f /var/log/cron.log
