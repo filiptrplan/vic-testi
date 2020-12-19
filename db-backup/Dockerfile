@@ -22,4 +22,5 @@ RUN touch /var/log/cron.log
 
 RUN chmod 0744 backupdb.sh
 
-CMD printenv | grep -v "no_proxy" >> /etc/environment && cron && tail -f /var/log/cron.log
+
+CMD printenv >> /etc/environment && cron && tail -f /var/log/cron.log
