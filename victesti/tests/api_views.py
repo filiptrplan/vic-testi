@@ -9,23 +9,16 @@ import requests
 from .s3 import s3_delete_objects, s3_generate_post_signature, s3_delete_object
 from .models import Professor, TestImage, Test, Subject
 
+
 def test_is_owner(request, pk):
-    if test_is_owner_helper(pk, request.POST.get('fb_token')):
+    if test_is_owner_helper(pk, request):
         return JsonResponse({'owner': True})
     else:
         return JsonResponse({'owner': False})
 
-def test_is_owner_helper(pk, access_token):
-    fb_user_id = Test.objects.filter(id=pk)[0].fb_user_id
-    fb_response = requests.get('https://graph.facebook.com/me', params={
-        'access_token': access_token,
-        'fields': 'id'
-    })
-    if 'error' in fb_response.json():
-        return False
-    
-    fb_id = fb_response.json()['id']
-    if fb_id == fb_user_id:
+def test_is_owner_helper(pk, request):
+    fb_user_id = Test.objects.filter(id=pk)[0].uploader.fb_id
+    if request.user.fb_id == fb_user_id:
         return True
     else:
         return False
@@ -144,32 +137,13 @@ def create_test(request):
         s3_delete_objects(file_locations)
         return JsonResponse({'error': 'bad_data'}, status=500)
 
-    # Check if user is member of the group
-    fb_response = requests.get('https://graph.facebook.com/me/groups', params={
-        'access_token': request.POST['fb_token']
-    })
-    if 'error' in fb_response.json():
-        s3_delete_objects(file_locations)
-        return JsonResponse({'error': 'invalid_fb_token'}, status=500)
-
-    fb_groups = fb_response.json()['data']
-    fb_group_id = settings.FB_GROUP_ID
-    # Finds the group with the ID or returns None
-    fb_group_auth = next((x for x in fb_groups if x['id'] == fb_group_id), None)
-    if(fb_group_auth is None):
-        s3_delete_objects(file_locations)
-        return JsonResponse({'error': 'not_group_member'}, status=500)
-
-    fb_response = requests.get('https://graph.facebook.com/me', params={
-        'access_token': request.POST['fb_token'],
-        'fields': 'id'
-    })
-    fb_user_id = fb_response.json()['id']
+    if request.user.is_authenticated == False:
+        return JsonResponse({'error': 'not_logged_in'}, status=500)
 
     professor = Professor.objects.get(id=int(request.POST['professorId']))
     year = int(request.POST['year'])
 
-    test = Test(year=year, professor=professor, fb_user_id=fb_user_id)
+    test = Test(year=year, professor=professor, uploader=request.user)
 
     if(request.POST.get('note') is not None):
         test.additional_note = request.POST.get('note')
@@ -187,7 +161,7 @@ def create_test(request):
     return JsonResponse({'redirect': redirect_url})
 
 def test_delete(request, pk):
-    if test_is_owner_helper(pk, request.POST.get('fb_token')):
+    if test_is_owner_helper(pk, request):
         test_images = TestImage.objects.filter(test__id=pk)
         for test_image in test_images:
             file = test_image.file

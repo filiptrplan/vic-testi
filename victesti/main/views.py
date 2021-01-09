@@ -1,35 +1,47 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from hashlib import sha256
-import random
 import requests
+from .models import User
 from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
-    return render(request, 'main/index.html');
+    return render(request, 'main/index.html')
 
-def fb_login(request):
-    api_token = request.POST.get('fb_token')
+def api_login(request):
+    api_token = request.POST.get('access_token')
     if api_token is None:
         return JsonResponse({'error': 'no_api_token'}, status=400)
 
     fb_response = requests.get('https://graph.facebook.com/me', params={
         'access_token': api_token,
-        'fields': ['id','first_name','last_name']
+        'fields': ['id','name']
     })
     if 'error' in fb_response.json():
         return JsonResponse({'error': 'invalid_fb_token'}, status=500)
 
-    fb_data = fb_response.json()
+    fb_user_id = fb_response.json()['id']
+    ip = visitor_ip_address(request)
     try:
-        user = User.objects.get(username=fb_data['id'])
+        user = User.objects.get(fb_id=fb_user_id)
     except User.DoesNotExist:
-        # Doesn't really matter what password we choose because we got the facebook api to handle the authentication for us
-        random_password = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
-        user = User(first_name=fb_data['first_name'], last_name=fb_data['last_name'], username=fb_data['id'], password=sha256(random_password))
-        user.save()
+        name = fb_response.json()['name']
+        user = User.objects.create_user(fb_user_id, name, ip)
+    
+    user.last_login_ip = ip
+    user.save()
 
     login(request, user)
     return JsonResponse({'status': 'logged_in'})
+
+def api_logout(request):
+    logout(request)
+    return JsonResponse({'status': 'logged_out'})
+
+def visitor_ip_address(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

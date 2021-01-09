@@ -39,7 +39,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('fb_id', 'name', 'creation_ip', 'last_login_ip', 'created_at', 'is_admin')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('fb_id', 'name', 'creation_ip', 'last_login_ip', 'created_at', 'is_admin')}),
+        (None, {'fields': ('fb_id', 'name', 'creation_ip', 'last_login_ip', 'is_admin')}),
     )
 
     add_fieldsets = (

@@ -1,6 +1,6 @@
 import $ from "cash-dom";
 import {ajax} from './ajax';
-import getCookie from './cookies';
+import { getCookie } from './cookies';
 
 $(document).ready(function () {
     // Check for click events on the navbar burger icon
@@ -9,6 +9,12 @@ $(document).ready(function () {
         $(".navbar-burger").toggleClass("is-active");
         $(".navbar-menu").toggleClass("is-active");
     });
+
+    if (loggedIn == false) {
+        $("#facebookLoginButton").on('click', login);
+    } else {
+        $("#facebookLoginButton").on('click', logout);
+    }
 });
 
 window.fbAsyncInit = function () {
@@ -26,14 +32,15 @@ function login() {
 }
 
 function logout() {
+    FB.getLoginStatus();
     FB.api("/me/permissions", "delete", handleConnected);
-    ajax("POST", "/api/logout", [], getCookie('csrftoken'), 'json')
+    ajax("POST", "/api/logout", [], getCookie('csrftoken'), 'json').then(() => location.reload())
 }
 
 function handleConnected(response){
     if (response.status == "connected") {
         ajax("POST", "/api/login", {
-            fb_token: response.authResponse.accessToken,
-        }, getCookie('csrftoken'), 'json');
+            access_token: response.authResponse.accessToken,
+        }, getCookie('csrftoken'), 'json').then(() => location.reload());
     }
 }

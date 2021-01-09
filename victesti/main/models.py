@@ -6,11 +6,13 @@ class UserManager(BaseUserManager):
     def create_user(self, fb_id, name, creation_ip):
         user = User(fb_id=fb_id, name=name, creation_ip=creation_ip)
         user.save()
+        return user
 
     def create_superuser(self, fb_id, name, password, creation_ip):
         user = User(fb_id=fb_id, name=name, creation_ip=creation_ip, is_admin=True)
         user.set_password(password)
         user.save()
+        return user
 
 class User(AbstractBaseUser):
     fb_id = models.CharField(max_length=20, unique=True, verbose_name='Facebook ID')

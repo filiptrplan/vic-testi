@@ -81,16 +81,15 @@ $('#printTestButton').on('click', () => {
     }, 1000);
 });
 
-checkIfTestOwner();
+$(document).ready(checkIfTestOwner)
 
 function checkIfTestOwner() {
-    if(getCookie('FBConnected') == null || getCookie('FBConnected') == 0){
+    if(!loggedIn){
         return;
     }
 
-    const apiToken = getCookie('FBAccessToken');
     let id = window.location.href.split("/").slice(-1)[0];
-    ajax('POST', `/tests/api/${id}/is-owner`, {fb_token: apiToken}, getCookie('csrftoken'), 'json').then((xhr) => {
+    ajax('POST', `/tests/api/${id}/is-owner`, [], getCookie('csrftoken'), 'json').then((xhr) => {
         if(xhr.status == 200) {
             if(xhr.response.owner){
                 $('#deleteButton').show();
@@ -109,7 +108,7 @@ $('.cancel-modal').on('click', (e) => {
 
 $('#deleteModalButton').on('click', () => {
     let id = window.location.href.split("/").slice(-1)[0];
-    ajax('POST', `/tests/api/${id}/delete`, {fb_token: getCookie('FBAccessToken')}, getCookie('csrftoken'), 'json').then((xhr) => {
+    ajax('POST', `/tests/api/${id}/delete`, [], getCookie('csrftoken'), 'json').then((xhr) => {
         if(xhr.status == 200) {
             const notification = new BulmaNotification('Test je bil uspešno odstranjen!', '.content', {
                 type: 'success',

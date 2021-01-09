@@ -85,7 +85,7 @@ yearChoices.setChoices([
 ]);
 
 $("#uploadButton").on("click", () => {
-    if(getCookie('FBConnected') == null || getCookie('FBConnected') == 0){
+    if(!loggedIn){
         // Throw error that you must be logged in to upload
         const notification = new BulmaNotification(
             "Niste prijavljeni v Facebook!",
@@ -154,7 +154,6 @@ document.addEventListener("upload-finished", () => {
         professorId: profChoices.getValue(true),
         fileLocations: fileLocations,
         year: yearChoices.getValue(true),
-        fb_token: getCookie('FBAccessToken')
     };
     if ($("#noteCheckbox").get()[0].checked && $("#noteInput").val() != ''){
         parameters.note = $("#noteInput").val();
@@ -254,12 +253,19 @@ $('#noteCheckbox').on('click', (e) => {
     }
 });
 
-if(getCookie('FBConnected') != 1) {
-    const warning = new BulmaNotification('Za nalaganje novih testov se morate prijaviti s Facebookom!', '.content', {
-        prepend: true,
-        type: 'warning'
-    })
-}
+$(document).ready(() => {
+    if (!loggedIn) {
+        const warning = new BulmaNotification(
+            "Za nalaganje novih testov se morate prijaviti s Facebookom!",
+            ".content",
+            {
+                prepend: true,
+                type: "warning",
+            }
+        );
+    }
+});
+
 
 function getUploadFromParams() {
     const urlParams = new URLSearchParams(window.location.search);
