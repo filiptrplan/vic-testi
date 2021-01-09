@@ -51,7 +51,9 @@ window.fbAsyncInit = function () {
 function handleConnected(response){
     if (response.status == "connected") {
         $('#facebookLoginButton').html('ODJAVA');
-        ajax('POST', '/api/login', { 'fb_token': })
+        ajax("POST", "/api/login", {
+            fb_token: response.authResponse.accessToken,
+        }, getCookie('csrftoken'), 'json');
         FB.api('/me', (response) => {
             $('#facebookName').html(`(${response.name})`);
             setCookie('FBName', response.name);
