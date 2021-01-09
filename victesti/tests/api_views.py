@@ -6,8 +6,8 @@ from django.db.models.functions import Greatest
 from django.core.paginator import Paginator
 from django.urls import reverse
 import requests
-from tests.s3 import s3_delete_objects, s3_generate_post_signature, s3_delete_object
-from tests.models import Professor, TestImage, Test, Subject
+from .s3 import s3_delete_objects, s3_generate_post_signature, s3_delete_object
+from .models import Professor, TestImage, Test, Subject
 
 def test_is_owner(request, pk):
     if test_is_owner_helper(pk, request.POST.get('fb_token')):

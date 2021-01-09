@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Subject(models.Model):
@@ -25,7 +26,7 @@ class Test(models.Model):
         YEAR4 = 4
     year = models.IntegerField(choices=Year.choices)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
-    fb_user_id = models.CharField(max_length=128, verbose_name="Uploader's Facebook ID")
+    uploader = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     additional_note = models.TextField(blank=True, null=True)
 

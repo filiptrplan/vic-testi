@@ -1,6 +1,7 @@
 import $ from "cash-dom";
 import { setCookie, getCookie, eraseCookie } from "./cookies";
 import BulmaNotification from './bulma-notification';
+import {ajax} from './ajax'
 
 let facebookConnectedInit = false;
 let facebookInitCheck = false;
@@ -50,6 +51,7 @@ window.fbAsyncInit = function () {
 function handleConnected(response){
     if (response.status == "connected") {
         $('#facebookLoginButton').html('ODJAVA');
+        ajax('POST', '/api/login', { 'fb_token': })
         FB.api('/me', (response) => {
             $('#facebookName').html(`(${response.name})`);
             setCookie('FBName', response.name);
