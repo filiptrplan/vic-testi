@@ -1,23 +1,6 @@
 import $ from "cash-dom";
-import { setCookie, getCookie, eraseCookie } from "./cookies";
-import BulmaNotification from './bulma-notification';
-
-let facebookConnectedInit = false;
-let facebookInitCheck = false;
-
-if(getCookie('FBConnected') == null){
-    setCookie('FBConnected', '0');
-}
-
-if(getCookie('FBConnected') == 0) {
-    facebookConnectedInit = false;
-    $("#facebookLoginButton").html("PRIJAVA S FACEBOOKOM");
-    $("#facebookName").html("");
-} else if (getCookie('FBConnected') == 1){
-    facebookConnectedInit = true;
-    $("#facebookLoginButton").html("ODJAVA");
-    $("#facebookName").html(`(${getCookie('FBName')})`);
-}
+import {ajax} from './ajax';
+import { getCookie } from './cookies';
 
 $(document).ready(function () {
     // Check for click events on the navbar burger icon
@@ -27,13 +10,11 @@ $(document).ready(function () {
         $(".navbar-menu").toggleClass("is-active");
     });
 
-    $('#facebookLoginButton').on('click', () => {
-        if(getCookie('FBConnected') == 1) {
-            FB.api('/me/permissions', 'delete', handleConnected);
-        } else {
-            FB.login(handleConnected, { scope: "groups_access_member_info" });
-        }
-    });
+    if (loggedIn == false) {
+        $("#facebookLoginButton").on('click', login);
+    } else {
+        $("#facebookLoginButton").on('click', logout);
+    }
 });
 
 window.fbAsyncInit = function () {
@@ -44,32 +25,22 @@ window.fbAsyncInit = function () {
         cookie: true,
         version: "v9.0",
     });
-    FB.getLoginStatus(handleConnected);
 };
+
+function login() {
+    FB.login(handleConnected);
+}
+
+function logout() {
+    FB.getLoginStatus();
+    FB.api("/me/permissions", "delete", handleConnected);
+    ajax("POST", "/api/logout", [], getCookie('csrftoken'), 'json').then(() => location.reload())
+}
 
 function handleConnected(response){
     if (response.status == "connected") {
-        $('#facebookLoginButton').html('ODJAVA');
-        FB.api('/me', (response) => {
-            $('#facebookName').html(`(${response.name})`);
-            setCookie('FBName', response.name);
-        });
-        setCookie('FBConnected', '1');
-        setCookie('FBAccessToken', response.authResponse.accessToken);
-    } else {
-        if(facebookConnectedInit && !facebookInitCheck) {
-            const warning = new BulmaNotification(`
-            Za pravilno delovanje strani prosim dovolite VSE piškotke.
-            `, '.content', {
-                prepend: true,
-                type: 'warning'
-            });
-        } else {
-            $('#facebookLoginButton').html('PRIJAVA S FACEBOOKOM');
-            $('#facebookName').html('');
-            setCookie('FBConnected', '0');
-            eraseCookie('FBAccessToken');
-        }
-        facebookInitCheck = true;
+        ajax("POST", "/api/login", {
+            access_token: response.authResponse.accessToken,
+        }, getCookie('csrftoken'), 'json').then(() => location.reload());
     }
 }

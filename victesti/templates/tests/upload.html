@@ -47,8 +47,8 @@
         {% for professor in professors %}
         professorList.push({id: {{professor.id}}, name: "{{professor}}"});
         {% endfor %}
-        const s3signatureURL = "{% url 'tests.signature' %}"
-        const createTestURL = "{% url 'tests.create' %}";
+        const s3signatureURL = "{% url 'tests.api.signature' %}"
+        const createTestURL = "{% url 'tests.api.create' %}";
     </script>
     {% csrf_token %}
     {% load static %}
