@@ -15,10 +15,10 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    fb_id = models.CharField(max_length=20, unique=True, verbose_name='Facebook ID')
+    fb_id = models.CharField(max_length=100, unique=True, verbose_name='Facebook ID')
     name = models.CharField(max_length=100, default='')
-    creation_ip = models.CharField(max_length=20, default='0.0.0.0')
-    last_login_ip = models.CharField(max_length=20, null=True, default='0.0.0.0')
+    creation_ip = models.CharField(max_length=100, default='0.0.0.0')
+    last_login_ip = models.CharField(max_length=100, null=True, default='0.0.0.0')
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     # This is only for superusers
