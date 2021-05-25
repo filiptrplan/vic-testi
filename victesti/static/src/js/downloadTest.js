@@ -52,7 +52,7 @@ export default function downloadAndZip (urls, testId, progressCallback={}) {
         url.slice(url.lastIndexOf("/") + 1, url.length)
     );
     return downloadMany(urls, customCallback).then((blobs) => {
-        ajax('GET', `/tests/api/${testId}/`, [], getCookie('csrftoken'), 'json').then((xhr) => {
+        ajax('GET', `/tests/api/${testId}`, [], getCookie('csrftoken'), 'json').then((xhr) => {
             let r = xhr.response;
             let zipFileName = `test-${r.id}-${r.professor_first_name.toLowerCase()}-${r.professor_last_name.toLowerCase()}-${r.year}-letnik`;
             exportZip(blobs, fileNames, zipFileName);
