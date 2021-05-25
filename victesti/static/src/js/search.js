@@ -117,7 +117,7 @@ function search(query){
     };
 
     if(typeof(yearParam) != "undefined") paramData["year"] = yearParam;
-    if(typeof(profParam) != "undefined") paramData["prof"] = profParam;
+    if(typeof(profParam) != "undefined") paramData["professor"] = profParam;
     if(typeof(subjectParam) != "undefined") paramData["subject"] = subjectParam;
 
     // Reflect the search in the history
