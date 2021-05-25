@@ -25,13 +25,13 @@
     "webpack": "^5.10.1",
     "webpack-bundle-tracker": "<1",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "4.0.0-beta.0"
+    "webpack-dev-server": "^4.0.0-beta.3"
   },
   "scripts": {
     "build": "yarn webpack --config webpack.config.js --mode development",
     "prod": "NODE_ENV=production yarn webpack --config webpack-production.config.js --mode production",
     "watch": "yarn webpack --config webpack.config.js --watch --mode development",
-    "dev": "yarn webpack-dev-server --config webpack.config.js --mode development --env development --hot"
+    "dev": "yarn webpack-dev-server --config webpack.config.js --mode development --env development --hot --port 8001 --host 0.0.0.0"
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
