@@ -32,10 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-if settings.DEBUG:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-else:
-    ALLOWED_HOSTS = ['victesti.si', '80.240.16.210']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'victesti.si', 'www.victesti.si']
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
